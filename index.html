@@ -8,8 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- jsPDF untuk Cetak Nota -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
@@ -73,7 +71,7 @@
         </div>
 
         <!-- MAIN LAYOUT -->
-        <div id="main-layout" class="hidden flex h-screen overflow-hidden bg-slate-100">
+        <div id="main-layout" class="hidden h-screen overflow-hidden bg-slate-100" style="flex-direction:row;">
             <!-- Sidebar -->
             <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 z-20 shadow-2xl relative">
                 <div class="h-16 flex items-center justify-center border-b border-slate-800 bg-slate-950">
@@ -154,14 +152,7 @@
                             </div>
                         </div>
                         
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <!-- Chart (Bar/Candle Simpel) -->
-                            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
-                                <div class="flex justify-between items-center mb-4 border-b pb-2">
-                                    <h3 class="font-bold text-slate-800"><i class="fas fa-chart-bar text-emerald-500 mr-2"></i>Grafik Omzet (7 Hari)</h3>
-                                </div>
-                                <canvas id="salesChart" height="120"></canvas>
-                            </div>
+                        <div class="grid grid-cols-1 gap-6">
                             <!-- Low Stock List -->
                             <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100 flex flex-col">
                                 <h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex justify-between items-center">
@@ -887,7 +878,9 @@
                     }
                     
                     document.getElementById('login-view').classList.add('hidden');
-                    document.getElementById('main-layout').classList.remove('hidden');
+                    const mainLayout = document.getElementById('main-layout');
+                    mainLayout.classList.remove('hidden');
+                    mainLayout.style.display = 'flex';
                     
                     await loadDataAwal();
                     applySettingsUI(); // re-apply in case backend overwrote it
@@ -902,7 +895,9 @@
 
         function handleLogout() {
             state.user = null;
-            document.getElementById('main-layout').classList.add('hidden');
+            const mainLayout = document.getElementById('main-layout');
+            mainLayout.classList.add('hidden');
+            mainLayout.style.display = 'none';
             document.getElementById('login-view').classList.remove('hidden');
             document.getElementById('login-form').reset();
             document.getElementById('login-error').classList.add('hidden');
@@ -910,7 +905,7 @@
 
         async function loadDataAwal() {
             const res = await callBackend('getDataAwal', null);
-            if (res.success && !IS_PREVIEW) state = res.data; 
+            if (res.success && !IS_PREVIEW) { state.barang = res.data.barang || state.barang; state.kas = res.data.kas || state.kas; state.penjualan = res.data.penjualan || state.penjualan; state.pembelian = res.data.pembelian || state.pembelian; state.biaya = res.data.biaya || state.biaya; state.hutang = res.data.hutang || state.hutang; state.piutang = res.data.piutang || state.piutang; state.retur = res.data.retur || state.retur; state.saldoKas = res.data.saldoKas ?? state.saldoKas; state.settings = res.data.settings || state.settings; }
         }
 
         function navigate(menu) {
@@ -998,7 +993,6 @@
         /** =========================================================================
          * MODUL: DASHBOARD & BARANG & KAS AWAL
          * ========================================================================= */
-        let salesChartInst = null;
         function renderDashboard() {
             const today = getTodayDate();
             let omzet = state.penjualan.filter(p => p.tanggal === today).reduce((sum, p) => sum + p.total, 0);
@@ -1020,27 +1014,6 @@
             });
             document.getElementById('low-stock-list').innerHTML = htmlStok || '<div class="text-center text-slate-400 mt-10"><i class="fas fa-check-circle text-4xl mb-2 text-emerald-300"></i><p>Stok aman</p></div>';
 
-            // Menghasilkan data 7 hari terakhir untuk grafik (dummy aggregate + real today)
-            const ctx = document.getElementById('salesChart').getContext('2d');
-            if(salesChartInst) salesChartInst.destroy();
-            salesChartInst = new Chart(ctx, {
-                type: 'bar', // Diubah menjadi bar (mirip candle simpel)
-                data: {
-                    labels: ['H-6', 'H-5', 'H-4', 'H-3', 'H-2', 'Kemarin', 'Hari Ini'],
-                    datasets: [{
-                        label: 'Omzet Harian (Rp)',
-                        data: [120000, 180000, 90000, 250000, 150000, 200000, omzet || 100000], 
-                        backgroundColor: '#10b981', // Solid Green
-                        borderRadius: 4,
-                        barThickness: 24
-                    }]
-                },
-                options: { 
-                    responsive: true, maintainAspectRatio: false, 
-                    scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5] } }, x: { grid: { display: false } } },
-                    plugins: { legend: { display: false } }
-                }
-            });
         }
 
         // --- KAS AWAL ---
