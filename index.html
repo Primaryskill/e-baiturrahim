@@ -59,7 +59,12 @@
                     </div>
                     <div class="mb-6">
                         <label class="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">Password</label>
-                        <input type="password" id="password" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50" required>
+                        <div class="relative">
+                            <input type="password" id="password" class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-slate-50 pr-12" required>
+                            <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-emerald-600 focus:outline-none">
+                                <i class="fas fa-eye" id="toggle-pwd-icon"></i>
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" id="btn-login" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
                         Login Sekarang
@@ -102,7 +107,7 @@
                         <li class="nav-item-admin mt-4 pt-4 border-t border-slate-800"><a href="#" onclick="navigate('pengaturan')" id="nav-pengaturan" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-cog w-7 text-slate-400"></i> Pengaturan</a></li>
                     </ul>
                 </nav>
-                <div class="p-4 border-t border-slate-800 bg-slate-950">
+                <div class="p-4 pb-10 border-t border-slate-800 bg-slate-950">
                     <div class="flex items-center mb-4">
                         <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold mr-3 shadow-inner" id="user-avatar">A</div>
                         <div>
@@ -294,9 +299,9 @@
                                         <div>
                                             <label class="text-xs font-black text-slate-700 block mb-2 uppercase tracking-wider">Metode Bayar</label>
                                             <select id="pos-payment-method" class="w-full p-2.5 md:p-3 border-2 border-slate-200 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 font-bold text-slate-700 text-sm md:text-base" onchange="togglePiutangField()">
-                                                <option value="Cash">💰 Cash / Tunai</option>
+                                                <option value="Cash">💵 Cash / Tunai</option>
                                                 <option value="QRIS">📱 QRIS / Transfer Bank</option>
-                                                <option value="Piutang">📒 Hutang Pelanggan (Kasbon)</option>
+                                                <option value="Piutang">🧾 Hutang Pelanggan (Kasbon)</option>
                                             </select>
                                         </div>
                                         <div id="pos-customer-field" class="hidden transition-all bg-orange-50 p-3 rounded-xl border border-orange-200">
@@ -696,6 +701,35 @@
             </div>
         </div>
 
+        <!-- MODAL EDIT PENJUALAN -->
+        <div id="modal-edit-penjualan" class="hidden fixed inset-0 bg-slate-900 bg-opacity-60 z-50 flex items-center justify-center backdrop-blur-sm p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border-t-4 border-blue-500">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-black text-xl text-slate-800"><i class="fas fa-edit text-blue-500 mr-2"></i>Edit Penjualan</h3>
+                        <button type="button" onclick="closeModalEditPenjualan()" class="text-slate-400 hover:text-rose-500 transition"><i class="fas fa-times text-xl"></i></button>
+                    </div>
+                    <form onsubmit="simpanEditPenjualan(event)">
+                        <input type="hidden" id="ep-id">
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Tanggal</label>
+                            <input type="date" id="ep-tanggal" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-bold" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Pelanggan</label>
+                            <input type="text" id="ep-pelanggan" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-bold" required>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Total Transaksi (Rp)</label>
+                            <input type="number" id="ep-total" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-blue-500 focus:border-blue-500 font-bold" required>
+                            <p class="text-xs text-orange-600 mt-2">*Catatan: Mengubah total akan menyesuaikan saldo kas / piutang terkait secara otomatis.</p>
+                        </div>
+                        <button type="submit" id="btn-save-ep" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3.5 rounded-xl shadow-lg transition">Simpan Perubahan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -734,9 +768,9 @@
                 { id: 'K006', tanggal: '2026-05-19', jenis: 'Masuk', kategori: 'Modal Awal', keterangan: 'Tambahan Kas Owner', nominal: 500000, saldo: 2285000 }
             ],
             penjualan: [
-                { id: 'PJ001', tanggal: '2026-05-16', pelanggan: 'Umum', total: 150000, metode: 'Cash', status_bayar: 'Lunas', laba: 40000 },
-                { id: 'PJ002', tanggal: '2026-05-17', pelanggan: 'Ibu Ani', total: 95000, metode: 'Piutang', status_bayar: 'Belum Lunas', laba: 20000 },
-                { id: 'PJ003', tanggal: '2026-05-19', pelanggan: 'Pak Budi', total: 85000, metode: 'QRIS', status_bayar: 'Lunas', laba: 25000 }
+                { id: 'PJ001', tanggal: '2026-05-16', pelanggan: 'Umum', total: 150000, metode: 'Cash', status_bayar: 'Lunas', laba: 40000, items: [] },
+                { id: 'PJ002', tanggal: '2026-05-17', pelanggan: 'Ibu Ani', total: 95000, metode: 'Piutang', status_bayar: 'Belum Lunas', laba: 20000, items: [] },
+                { id: 'PJ003', tanggal: '2026-05-19', pelanggan: 'Pak Budi', total: 85000, metode: 'QRIS', status_bayar: 'Lunas', laba: 25000, items: [] }
             ],
             pembelian: [
                 { id: 'PB001', tanggal: '2026-05-16', supplier: 'CV. Buku Makmur', total: 200000, status_bayar: 'Hutang' },
@@ -832,9 +866,10 @@
             if (action === 'simpanPenjualanServer') {
                 const id_pj = 'PJ' + Date.now().toString().slice(-6);
                 let t_hpp = 0;
-                payload.items.forEach(i => { const b = state.barang.find(x => x.kode === i.kode); if(b) { b.stok -= i.qty; t_hpp += (b.harga_beli * i.qty); } });
+                const savedItems = JSON.parse(JSON.stringify(payload.items)); // Deep copy untuk kebutuhan restore
+                savedItems.forEach(i => { const b = state.barang.find(x => x.kode === i.kode); if(b) { b.stok -= i.qty; t_hpp += (b.harga_beli * i.qty); } });
                 const laba = payload.total - t_hpp;
-                state.penjualan.push({ id: id_pj, tanggal: today, pelanggan: payload.pelanggan || 'Umum', total: payload.total, metode: payload.metode, status_bayar: payload.metode === 'Piutang' ? 'Belum Lunas' : 'Lunas', laba: laba });
+                state.penjualan.push({ id: id_pj, tanggal: today, pelanggan: payload.pelanggan || 'Umum', total: payload.total, metode: payload.metode, status_bayar: payload.metode === 'Piutang' ? 'Belum Lunas' : 'Lunas', laba: laba, items: savedItems });
                 
                 if(payload.metode !== 'Piutang') { 
                     state.saldoKas += payload.total;
@@ -843,6 +878,75 @@
                     state.piutang.push({ id: 'PT'+Date.now(), id_ref: id_pj, pelanggan: payload.pelanggan, nominal_awal: payload.total, sisa_piutang: payload.total, status: 'Belum Lunas' });
                 }
                 return { success: true, id_transaksi: id_pj };
+            }
+            if (action === 'editPenjualanServer') {
+                const pj = state.penjualan.find(p => p.id === payload.id);
+                if(pj) {
+                    const selisih = payload.total - pj.total;
+                    pj.tanggal = payload.tanggal;
+                    pj.pelanggan = payload.pelanggan;
+                    pj.total = payload.total;
+                    
+                    if(pj.metode !== 'Piutang') {
+                        const kas = state.kas.find(k => k.keterangan.includes(pj.id));
+                        if(kas) {
+                            kas.nominal += selisih;
+                            kas.tanggal = payload.tanggal;
+                        }
+                    } else {
+                        const pt = state.piutang.find(p => p.id_ref === pj.id);
+                        if(pt) {
+                            pt.nominal_awal += selisih;
+                            pt.sisa_piutang += selisih;
+                            pt.pelanggan = payload.pelanggan;
+                        }
+                    }
+                    
+                    let currentSaldo = 0;
+                    state.kas.forEach(k => {
+                        if(k.jenis === 'Masuk') currentSaldo += k.nominal;
+                        else currentSaldo -= k.nominal;
+                        k.saldo = currentSaldo;
+                    });
+                    state.saldoKas = currentSaldo;
+                }
+                return {success: true};
+            }
+            if (action === 'hapusPenjualanServer') {
+                const pjIndex = state.penjualan.findIndex(p => p.id === payload.id);
+                if(pjIndex > -1) {
+                    const pj = state.penjualan[pjIndex];
+                    
+                    // Kembalikan Stok Barang
+                    if (pj.items) {
+                        pj.items.forEach(i => {
+                            const b = state.barang.find(x => x.kode === i.kode);
+                            if(b) b.stok += parseInt(i.qty);
+                        });
+                    }
+
+                    // Hapus pencatatan pada Kas / Piutang
+                    if(pj.metode !== 'Piutang') {
+                        const kasIndex = state.kas.findIndex(k => k.keterangan.includes(pj.id));
+                        if(kasIndex > -1) state.kas.splice(kasIndex, 1);
+                    } else {
+                        const ptIndex = state.piutang.findIndex(p => p.id_ref === pj.id);
+                        if(ptIndex > -1) state.piutang.splice(ptIndex, 1);
+                    }
+                    
+                    // Hapus data penjualan dari state
+                    state.penjualan.splice(pjIndex, 1);
+
+                    // Kalkulasi ulang seluruh saldo kas agar tetap presisi
+                    let currentSaldo = 0;
+                    state.kas.forEach(k => {
+                        if(k.jenis === 'Masuk') currentSaldo += k.nominal;
+                        else currentSaldo -= k.nominal;
+                        k.saldo = currentSaldo;
+                    });
+                    state.saldoKas = currentSaldo;
+                }
+                return {success: true};
             }
             if (action === 'simpanPembelianServer') {
                 const id_pb = 'PB' + Date.now().toString().slice(-6);
@@ -906,6 +1010,21 @@
             }
         }
 
+        // Fungsionalitas Lihat Password
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const pwdIcon = document.getElementById('toggle-pwd-icon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                pwdIcon.classList.remove('fa-eye');
+                pwdIcon.classList.add('fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                pwdIcon.classList.remove('fa-eye-slash');
+                pwdIcon.classList.add('fa-eye');
+            }
+        }
+
         async function handleLogin(e) {
             e.preventDefault();
             const user = document.getElementById('username').value;
@@ -951,6 +1070,13 @@
             mainLayout.style.display = 'none';
             document.getElementById('login-view').classList.remove('hidden');
             document.getElementById('login-form').reset();
+            
+            // Reset Eye icon just in case
+            const pwdInput = document.getElementById('password');
+            pwdInput.type = 'password';
+            document.getElementById('toggle-pwd-icon').classList.remove('fa-eye-slash');
+            document.getElementById('toggle-pwd-icon').classList.add('fa-eye');
+            
             document.getElementById('login-error').classList.add('hidden');
             
             // Memastikan sidebar tertutup saat di mobile setelah logout
@@ -1398,6 +1524,47 @@
         }
 
         /** =========================================================================
+         * FUNGSI EDIT & HAPUS PENJUALAN
+         * ========================================================================= */
+        function openEditPenjualan(id) {
+            const p = state.penjualan.find(x => x.id === id);
+            if(p) {
+                document.getElementById('ep-id').value = p.id;
+                document.getElementById('ep-tanggal').value = p.tanggal;
+                document.getElementById('ep-pelanggan').value = p.pelanggan;
+                document.getElementById('ep-total').value = p.total;
+                document.getElementById('modal-edit-penjualan').classList.remove('hidden');
+            }
+        }
+        function closeModalEditPenjualan() { document.getElementById('modal-edit-penjualan').classList.add('hidden'); }
+
+        async function simpanEditPenjualan(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-save-ep'); btn.disabled = true;
+            try {
+                await callBackend('editPenjualanServer', {
+                    id: document.getElementById('ep-id').value,
+                    tanggal: document.getElementById('ep-tanggal').value,
+                    pelanggan: document.getElementById('ep-pelanggan').value,
+                    total: parseFloat(document.getElementById('ep-total').value)
+                });
+                closeModalEditPenjualan();
+                switchTabLaporan('penjualan');
+                alert('Data penjualan berhasil diubah!');
+            } catch(err) { alert('Gagal mengubah data'); }
+            finally { btn.disabled = false; }
+        }
+
+        async function hapusPenjualan(id) {
+            if(!confirm('Anda yakin ingin membatalkan/menghapus transaksi penjualan ini?\n\nCatatan stok barang, kas, dan atau piutang terkait akan dikembalikan secara otomatis.')) return;
+            try {
+                await callBackend('hapusPenjualanServer', { id: id });
+                switchTabLaporan('penjualan');
+                alert('Transaksi berhasil dihapus dan catatan telah dikembalikan.');
+            } catch(err) { alert('Gagal menghapus data'); }
+        }
+
+        /** =========================================================================
          * MODUL: LAPORAN AKUNTANSI LENGKAP
          * ========================================================================= */
         function switchTabLaporan(tab) {
@@ -1472,10 +1639,21 @@
                 cont.innerHTML = h + `</tbody></table></div>`;
             }
             else if(tab === 'penjualan') {
-                let h = `<div class="overflow-x-auto rounded-xl border border-slate-200 mt-4"><table class="w-full text-left border-collapse text-sm bg-white min-w-max"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">ID Transaksi</th><th class="p-4 font-semibold">Tanggal</th><th class="p-4 font-semibold">Pelanggan</th><th class="p-4 font-semibold">Metode</th><th class="p-4 text-center font-semibold">Status</th><th class="p-4 text-right font-semibold">Total Transaksi</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+                let h = `<div class="overflow-x-auto rounded-xl border border-slate-200 mt-4"><table class="w-full text-left border-collapse text-sm bg-white min-w-max"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">ID Transaksi</th><th class="p-4 font-semibold">Tanggal</th><th class="p-4 font-semibold">Pelanggan</th><th class="p-4 font-semibold">Metode</th><th class="p-4 text-center font-semibold">Status</th><th class="p-4 text-right font-semibold">Total Transaksi</th><th class="p-4 text-center font-semibold">Aksi</th></tr></thead><tbody class="divide-y divide-slate-100">`;
                 state.penjualan.slice().reverse().forEach(p => {
                     const st = p.status_bayar === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700';
-                    h += `<tr class="hover:bg-slate-50"><td class="p-4 text-emerald-600 font-black font-mono text-xs">${p.id}</td><td class="p-4 font-medium text-slate-500">${p.tanggal}</td><td class="p-4 font-bold text-slate-700">${p.pelanggan}</td><td class="p-4 font-semibold">${p.metode}</td><td class="p-4 text-center"><span class="px-3 py-1 rounded-lg text-xs font-black ${st}">${p.status_bayar}</span></td><td class="p-4 text-right font-black text-slate-800 text-base md:text-lg">${formatRp(p.total)}</td></tr>`;
+                    h += `<tr class="hover:bg-slate-50">
+                            <td class="p-4 text-emerald-600 font-black font-mono text-xs">${p.id}</td>
+                            <td class="p-4 font-medium text-slate-500">${p.tanggal}</td>
+                            <td class="p-4 font-bold text-slate-700">${p.pelanggan}</td>
+                            <td class="p-4 font-semibold">${p.metode}</td>
+                            <td class="p-4 text-center"><span class="px-3 py-1 rounded-lg text-xs font-black ${st}">${p.status_bayar}</span></td>
+                            <td class="p-4 text-right font-black text-slate-800 text-base md:text-lg">${formatRp(p.total)}</td>
+                            <td class="p-4 text-center space-x-2 whitespace-nowrap">
+                                <button onclick="openEditPenjualan('${p.id}')" class="bg-blue-100 text-blue-600 hover:bg-blue-200 px-3 py-1 rounded text-xs font-bold transition shadow-sm"><i class="fas fa-edit"></i> Edit</button>
+                                <button onclick="hapusPenjualan('${p.id}')" class="bg-rose-100 text-rose-600 hover:bg-rose-200 px-3 py-1 rounded text-xs font-bold transition shadow-sm"><i class="fas fa-trash-alt"></i> Hapus</button>
+                            </td>
+                          </tr>`;
                 });
                 cont.innerHTML = h + `</tbody></table></div>`;
             }
