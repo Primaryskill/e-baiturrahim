@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- jsPDF untuk Cetak Nota -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
@@ -734,66 +736,31 @@
 
     <script>
         /** =========================================================================
-         * KONFIGURASI APLIKASI
+         * KONFIGURASI SUPABASE
+         * Ganti dengan URL dan ANON KEY dari project Supabase Anda
+         * Dapatkan di: Settings > API > Project URL & anon public key
          * ========================================================================= */
-        const IS_PREVIEW = true; // Set false jika dideploy via Apps Script
-        const GAS_URL = "URL_DEPLOY_GAS_ANDA_DISINI";
+        const SUPABASE_URL = 'https://ponxueetawzvcbjtdnhb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvbnh1ZWV0YXd6dmNianRkbmhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxNzY4MjgsImV4cCI6MjA5NDc1MjgyOH0.2w1BUVBmanVM56CYSDsN0ss4RKebmbZXMlT8HK9Thb4';
 
         /** =========================================================================
-         * DATA DUMMY & STATE GLOBAL (DIPERBANYAK)
+         * INISIALISASI SUPABASE CLIENT
+         * ========================================================================= */
+        const { createClient } = supabase;
+        const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        /** =========================================================================
+         * DATA DUMMY & STATE GLOBAL (untuk fallback/referensi sementara)
          * ========================================================================= */
         let state = {
             settings: { appName: "E-Baiturrahim", appIcon: "fa-store", loginBg: "" },
             user: null,
-            barang: [
-                { id: '1', kode: 'BRG001', nama: 'Buku Tulis Sinar Dunia 38', kategori: 'Alat Tulis', harga_beli: 3000, harga_jual: 4500, stok: 45, satuan: 'pcs' },
-                { id: '2', kode: 'BRG002', nama: 'Pensil 2B Faber Castell', kategori: 'Alat Tulis', harga_beli: 2000, harga_jual: 3500, stok: 120, satuan: 'pcs' },
-                { id: '3', kode: 'BRG003', nama: 'Seragam TPQ Laki-laki M', kategori: 'Seragam', harga_beli: 75000, harga_jual: 90000, stok: 8, satuan: 'stel' },
-                { id: '4', kode: 'BRG004', nama: 'Juz Amma Non Terjemah', kategori: 'Buku', harga_beli: 8000, harga_jual: 12000, stok: 3, satuan: 'buku' },
-                { id: '5', kode: 'BRG005', nama: 'Susu Kotak Ultra 200ml', kategori: 'Snack', harga_beli: 3500, harga_jual: 5000, stok: 24, satuan: 'kotak' },
-                { id: '6', kode: 'BRG006', nama: 'Buku Gambar A4', kategori: 'Alat Tulis', harga_beli: 4500, harga_jual: 6000, stok: 30, satuan: 'pcs' },
-                { id: '7', kode: 'BRG007', nama: 'Iqro Jilid 1-6 Bendel', kategori: 'Buku', harga_beli: 15000, harga_jual: 20000, stok: 15, satuan: 'buku' },
-                { id: '8', kode: 'BRG008', nama: 'Penghapus Joyko Hitam', kategori: 'Alat Tulis', harga_beli: 1000, harga_jual: 2000, stok: 50, satuan: 'pcs' },
-                { id: '9', kode: 'BRG009', nama: 'Seragam TPQ Perempuan L', kategori: 'Seragam', harga_beli: 80000, harga_jual: 95000, stok: 4, satuan: 'stel' },
-                { id: '10', kode: 'BRG010', nama: 'Madu Sachet Tj', kategori: 'Herbal', harga_beli: 1000, harga_jual: 2000, stok: 100, satuan: 'sachet' },
-                { id: '11', kode: 'BRG011', nama: 'Rautan Kaca Bulat', kategori: 'Alat Tulis', harga_beli: 1500, harga_jual: 3000, stok: 40, satuan: 'pcs' },
-                { id: '12', kode: 'BRG012', nama: 'Biskuit Roma Kelapa', kategori: 'Snack', harga_beli: 8000, harga_jual: 10000, stok: 10, satuan: 'bungkus' }
-            ],
-            kas: [
-                { id: 'K001', tanggal: '2026-05-15', jenis: 'Masuk', kategori: 'Modal Awal', keterangan: 'Saldo Awal Sistem', nominal: 2000000, saldo: 2000000 },
-                { id: 'K002', tanggal: '2026-05-16', jenis: 'Masuk', kategori: 'Penjualan', keterangan: 'Penjualan PJ001', nominal: 150000, saldo: 2150000 },
-                { id: 'K003', tanggal: '2026-05-17', jenis: 'Keluar', kategori: 'Biaya', keterangan: 'Listrik & Air (Bulan Ini)', nominal: 150000, saldo: 2000000 },
-                { id: 'K004', tanggal: '2026-05-18', jenis: 'Keluar', kategori: 'Pembelian', keterangan: 'Ke PT. Sinar Abadi', nominal: 300000, saldo: 1700000 },
-                { id: 'K005', tanggal: '2026-05-19', jenis: 'Masuk', kategori: 'Penjualan', keterangan: 'Penjualan PJ003', nominal: 85000, saldo: 1785000 },
-                { id: 'K006', tanggal: '2026-05-19', jenis: 'Masuk', kategori: 'Modal Awal', keterangan: 'Tambahan Kas Owner', nominal: 500000, saldo: 2285000 }
-            ],
-            penjualan: [
-                { id: 'PJ001', tanggal: '2026-05-16', pelanggan: 'Umum', total: 150000, metode: 'Cash', status_bayar: 'Lunas', laba: 40000, items: [] },
-                { id: 'PJ002', tanggal: '2026-05-17', pelanggan: 'Ibu Ani', total: 95000, metode: 'Piutang', status_bayar: 'Belum Lunas', laba: 20000, items: [] },
-                { id: 'PJ003', tanggal: '2026-05-19', pelanggan: 'Pak Budi', total: 85000, metode: 'QRIS', status_bayar: 'Lunas', laba: 25000, items: [] }
-            ],
-            pembelian: [
-                { id: 'PB001', tanggal: '2026-05-16', supplier: 'CV. Buku Makmur', total: 200000, status_bayar: 'Hutang' },
-                { id: 'PB002', tanggal: '2026-05-18', supplier: 'PT. Sinar Abadi', total: 300000, status_bayar: 'Lunas' }
-            ],
-            retur: [
-                { id: 'RT001', tanggal: '2026-05-19', jenis: 'Dari Pelanggan', kode_barang: 'BRG004', qty: 1, keterangan: 'Cover sobek sedikit' }
-            ],
-            biaya: [
-                { id: 'BY001', tanggal: '2026-05-17', kategori: 'Listrik & Air', keterangan: 'Listrik & Air (Bulan Ini)', nominal: 150000 }
-            ],
-            hutang: [
-                { id: 'HT001', id_ref: 'PB001', supplier: 'CV. Buku Makmur', nominal_awal: 200000, sisa_hutang: 200000, status: 'Belum Lunas' }
-            ],
-            piutang: [
-                { id: 'PT001', id_ref: 'PJ002', pelanggan: 'Ibu Ani', nominal_awal: 95000, sisa_piutang: 95000, status: 'Belum Lunas' }
-            ],
-            posCart: [],
-            beliCart: [],
-            saldoKas: 2285000 
+            barang: [], kas: [], penjualan: [], pembelian: [],
+            retur: [], biaya: [], hutang: [], piutang: [],
+            posCart: [], beliCart: [], saldoKas: 0
         };
 
-        const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
+        const formatRp = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
         const getTodayDate = () => {
             const d = new Date(); let m = ''+(d.getMonth()+1), day = ''+d.getDate(), y = d.getFullYear();
             if (m.length < 2) m = '0'+m; if (day.length < 2) day = '0'+day;
@@ -804,193 +771,409 @@
             const n = state.settings?.appName || 'E-Baiturrahim';
             const i = state.settings?.appIcon || 'fa-store';
             const bg = state.settings?.loginBg;
-
             document.querySelectorAll('.app-name-display').forEach(el => el.innerText = n);
             document.querySelectorAll('.app-icon-display').forEach(el => el.className = `fas ${i} mr-2 app-icon-display text-emerald-500`);
             document.title = n;
-
-            // Terapkan Background Login (Dengan Efek Opacity via class Tailwind `opacity-50` yang sudah dipasang di HTML)
             const bgEl = document.getElementById('login-bg-image');
             if (bgEl) {
-                if (bg && bg.trim() !== "") {
-                    bgEl.style.backgroundImage = `url(${bg})`;
-                    bgEl.classList.remove('hidden');
-                } else {
-                    bgEl.style.backgroundImage = 'none';
-                    bgEl.classList.add('hidden');
-                }
+                if (bg && bg.trim() !== "") { bgEl.style.backgroundImage = `url(${bg})`; bgEl.classList.remove('hidden'); }
+                else { bgEl.style.backgroundImage = 'none'; bgEl.classList.add('hidden'); }
             }
         }
 
         /** =========================================================================
-         * CORE LOGIC & API SIMULATOR
+         * CORE LOGIC - SUPABASE BACKEND
+         * Semua operasi data langsung ke Supabase
          * ========================================================================= */
-        function callBackend(action, payload) {
-            return new Promise((resolve, reject) => {
-                showLoading(true);
-                if (IS_PREVIEW) {
-                    setTimeout(() => { showLoading(false); resolve(simulateBackend(action, payload)); }, 400); 
-                } else {
-                    google.script.run
-                        .withSuccessHandler(res => { showLoading(false); resolve(res); })
-                        .withFailureHandler(err => { showLoading(false); reject(err); })
-                        [action](payload);
-                }
-            });
-        }
-
         function showLoading(show) { document.getElementById('loading-indicator').style.display = show ? 'block' : 'none'; }
 
-        // --- SIMULASI BACKEND ---
-        function simulateBackend(action, payload) {
+        async function callBackend(action, payload) {
+            showLoading(true);
+            try {
+                const result = await supabaseBackend(action, payload);
+                return result;
+            } catch(e) {
+                console.error('Backend error:', e);
+                throw e;
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function supabaseBackend(action, payload) {
             const today = getTodayDate();
+
+            // ============= LOGIN =============
             if (action === 'prosesLogin') {
-                if (payload.user === 'admin' && payload.pass === 'edudigital') return { success: true, data: { username: 'admin', role: 'Admin', nama: 'Administrator' } };
-                if (payload.user === 'peserta' && payload.pass === 'edudigital') return { success: true, data: { username: 'peserta', role: 'Kasir', nama: 'Petugas Kasir' } };
-                return { success: false, message: 'Username/Password salah' };
+                const { data, error } = await sb.from('users')
+                    .select('*').eq('username', payload.user).eq('password', payload.pass).single();
+                if (error || !data) return { success: false, message: 'Username/Password salah' };
+                return { success: true, data: { username: data.username, role: data.role, nama: data.nama } };
             }
-            if (action === 'getDataAwal') return { success: true, data: state };
+
+            // ============= GET DATA AWAL =============
+            if (action === 'getDataAwal') {
+                const [
+                    { data: barang }, { data: kas }, { data: penjualan },
+                    { data: pembelian }, { data: retur }, { data: biaya },
+                    { data: hutang }, { data: piutang }, { data: settings }
+                ] = await Promise.all([
+                    sb.from('barang').select('*').order('kode'),
+                    sb.from('kas').select('*').order('created_at'),
+                    sb.from('penjualan').select('*').order('created_at'),
+                    sb.from('pembelian').select('*').order('created_at'),
+                    sb.from('retur').select('*').order('created_at'),
+                    sb.from('biaya').select('*').order('created_at'),
+                    sb.from('hutang').select('*').order('created_at'),
+                    sb.from('piutang').select('*').order('created_at'),
+                    sb.from('settings').select('*').limit(1).single()
+                ]);
+
+                // Normalisasi nama kolom settings dari snake_case ke camelCase
+                const settingsNorm = settings ? {
+                    appName: settings.app_name,
+                    appIcon: settings.app_icon,
+                    loginBg: settings.login_bg
+                } : state.settings;
+
+                // Normalisasi barang (snake_case -> camelCase untuk harga_beli/harga_jual)
+                const barangNorm = (barang || []).map(b => ({
+                    ...b,
+                    harga_beli: parseFloat(b.harga_beli),
+                    harga_jual: parseFloat(b.harga_jual),
+                    stok: parseInt(b.stok)
+                }));
+
+                // Hitung saldo kas dari record kas
+                let saldoKas = 0;
+                if (kas && kas.length > 0) {
+                    saldoKas = parseFloat(kas[kas.length - 1].saldo);
+                } else if (settings) {
+                    saldoKas = parseFloat(settings.saldo_kas || 0);
+                }
+
+                return {
+                    success: true,
+                    data: {
+                        barang: barangNorm || [],
+                        kas: (kas || []).map(k => ({ ...k, nominal: parseFloat(k.nominal), saldo: parseFloat(k.saldo) })),
+                        penjualan: (penjualan || []).map(p => ({ ...p, total: parseFloat(p.total), laba: parseFloat(p.laba || 0), items: p.items || [] })),
+                        pembelian: (pembelian || []).map(p => ({ ...p, total: parseFloat(p.total) })),
+                        retur: retur || [],
+                        biaya: (biaya || []).map(b => ({ ...b, nominal: parseFloat(b.nominal) })),
+                        hutang: (hutang || []).map(h => ({ ...h, nominal_awal: parseFloat(h.nominal_awal), sisa_hutang: parseFloat(h.sisa_hutang) })),
+                        piutang: (piutang || []).map(p => ({ ...p, nominal_awal: parseFloat(p.nominal_awal), sisa_piutang: parseFloat(p.sisa_piutang) })),
+                        saldoKas,
+                        settings: settingsNorm
+                    }
+                };
+            }
+
+            // ============= SETTINGS =============
             if (action === 'simpanSettingsServer') {
-                state.settings = payload; return { success: true };
-            }
-            if (action === 'simpanBarangServer') {
-                if (payload.id) { const i = state.barang.findIndex(b => b.id === payload.id); state.barang[i] = payload; }
-                else { payload.id = Date.now().toString(); state.barang.push(payload); }
+                const { error } = await sb.from('settings').update({
+                    app_name: payload.appName,
+                    app_icon: payload.appIcon,
+                    login_bg: payload.loginBg,
+                    updated_at: new Date().toISOString()
+                }).eq('id', 1);
+                if (error) throw error;
+                state.settings = payload;
                 return { success: true };
             }
+
+            // ============= BARANG =============
+            if (action === 'simpanBarangServer') {
+                if (payload.id) {
+                    // Update
+                    const { error } = await sb.from('barang').update({
+                        kode: payload.kode, nama: payload.nama, kategori: payload.kategori,
+                        satuan: payload.satuan, harga_beli: payload.harga_beli,
+                        harga_jual: payload.harga_jual, stok: payload.stok,
+                        updated_at: new Date().toISOString()
+                    }).eq('id', payload.id);
+                    if (error) throw error;
+                    const idx = state.barang.findIndex(b => b.id === payload.id);
+                    if (idx >= 0) state.barang[idx] = payload;
+                } else {
+                    // Insert baru
+                    payload.id = Date.now().toString();
+                    const { error } = await sb.from('barang').insert({
+                        id: payload.id, kode: payload.kode, nama: payload.nama,
+                        kategori: payload.kategori, satuan: payload.satuan,
+                        harga_beli: payload.harga_beli, harga_jual: payload.harga_jual, stok: payload.stok
+                    });
+                    if (error) throw error;
+                    state.barang.push(payload);
+                }
+                return { success: true };
+            }
+
+            // ============= KAS AWAL / MODAL =============
             if (action === 'simpanKasAwalServer') {
                 state.saldoKas += payload.nominal;
-                state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Masuk', kategori: 'Modal Awal', keterangan: payload.ket, nominal: payload.nominal, saldo: state.saldoKas });
+                const kasEntry = {
+                    id: 'K' + Date.now(), tanggal: today,
+                    jenis: 'Masuk', kategori: 'Modal Awal',
+                    keterangan: payload.ket, nominal: payload.nominal, saldo: state.saldoKas
+                };
+                // Update saldo di settings
+                await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                const { error } = await sb.from('kas').insert(kasEntry);
+                if (error) throw error;
+                state.kas.push(kasEntry);
                 return { success: true };
             }
+
+            // ============= PENJUALAN =============
             if (action === 'simpanPenjualanServer') {
                 const id_pj = 'PJ' + Date.now().toString().slice(-6);
                 let t_hpp = 0;
-                const savedItems = JSON.parse(JSON.stringify(payload.items)); // Deep copy untuk kebutuhan restore
-                savedItems.forEach(i => { const b = state.barang.find(x => x.kode === i.kode); if(b) { b.stok -= i.qty; t_hpp += (b.harga_beli * i.qty); } });
+                const savedItems = JSON.parse(JSON.stringify(payload.items));
+
+                // Update stok barang satu per satu
+                for (const item of savedItems) {
+                    const b = state.barang.find(x => x.kode === item.kode);
+                    if (b) {
+                        t_hpp += (b.harga_beli * item.qty);
+                        b.stok -= item.qty;
+                        await sb.from('barang').update({ stok: b.stok, updated_at: new Date().toISOString() }).eq('kode', item.kode);
+                    }
+                }
+
                 const laba = payload.total - t_hpp;
-                state.penjualan.push({ id: id_pj, tanggal: today, pelanggan: payload.pelanggan || 'Umum', total: payload.total, metode: payload.metode, status_bayar: payload.metode === 'Piutang' ? 'Belum Lunas' : 'Lunas', laba: laba, items: savedItems });
-                
-                if(payload.metode !== 'Piutang') { 
+                const pjEntry = {
+                    id: id_pj, tanggal: today, pelanggan: payload.pelanggan || 'Umum',
+                    total: payload.total, metode: payload.metode,
+                    status_bayar: payload.metode === 'Piutang' ? 'Belum Lunas' : 'Lunas',
+                    laba, items: savedItems
+                };
+                const { error: errPj } = await sb.from('penjualan').insert(pjEntry);
+                if (errPj) throw errPj;
+                state.penjualan.push(pjEntry);
+
+                if (payload.metode !== 'Piutang') {
                     state.saldoKas += payload.total;
-                    state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Masuk', kategori: 'Penjualan', keterangan: 'Penjualan ' + id_pj, nominal: payload.total, saldo: state.saldoKas });
-                } else { 
-                    state.piutang.push({ id: 'PT'+Date.now(), id_ref: id_pj, pelanggan: payload.pelanggan, nominal_awal: payload.total, sisa_piutang: payload.total, status: 'Belum Lunas' });
+                    const kasEntry = {
+                        id: 'K' + Date.now(), tanggal: today, jenis: 'Masuk',
+                        kategori: 'Penjualan', keterangan: 'Penjualan ' + id_pj,
+                        nominal: payload.total, saldo: state.saldoKas
+                    };
+                    await sb.from('kas').insert(kasEntry);
+                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                    state.kas.push(kasEntry);
+                } else {
+                    const ptEntry = {
+                        id: 'PT' + Date.now(), id_ref: id_pj, pelanggan: payload.pelanggan,
+                        nominal_awal: payload.total, sisa_piutang: payload.total, status: 'Belum Lunas'
+                    };
+                    await sb.from('piutang').insert(ptEntry);
+                    state.piutang.push(ptEntry);
                 }
                 return { success: true, id_transaksi: id_pj };
             }
+
+            // ============= EDIT PENJUALAN =============
             if (action === 'editPenjualanServer') {
                 const pj = state.penjualan.find(p => p.id === payload.id);
-                if(pj) {
+                if (pj) {
                     const selisih = payload.total - pj.total;
-                    pj.tanggal = payload.tanggal;
-                    pj.pelanggan = payload.pelanggan;
-                    pj.total = payload.total;
-                    
-                    if(pj.metode !== 'Piutang') {
-                        const kas = state.kas.find(k => k.keterangan.includes(pj.id));
-                        if(kas) {
-                            kas.nominal += selisih;
-                            kas.tanggal = payload.tanggal;
+                    await sb.from('penjualan').update({
+                        tanggal: payload.tanggal, pelanggan: payload.pelanggan, total: payload.total
+                    }).eq('id', payload.id);
+
+                    pj.tanggal = payload.tanggal; pj.pelanggan = payload.pelanggan; pj.total = payload.total;
+
+                    if (pj.metode !== 'Piutang') {
+                        const kasItem = state.kas.find(k => k.keterangan && k.keterangan.includes(pj.id));
+                        if (kasItem) {
+                            kasItem.nominal += selisih; kasItem.tanggal = payload.tanggal;
+                            await sb.from('kas').update({ nominal: kasItem.nominal, tanggal: kasItem.tanggal }).eq('id', kasItem.id);
                         }
                     } else {
                         const pt = state.piutang.find(p => p.id_ref === pj.id);
-                        if(pt) {
-                            pt.nominal_awal += selisih;
-                            pt.sisa_piutang += selisih;
-                            pt.pelanggan = payload.pelanggan;
+                        if (pt) {
+                            pt.nominal_awal += selisih; pt.sisa_piutang += selisih; pt.pelanggan = payload.pelanggan;
+                            await sb.from('piutang').update({ nominal_awal: pt.nominal_awal, sisa_piutang: pt.sisa_piutang, pelanggan: pt.pelanggan }).eq('id', pt.id);
                         }
                     }
-                    
+                    // Recalculate saldo kas
                     let currentSaldo = 0;
-                    state.kas.forEach(k => {
-                        if(k.jenis === 'Masuk') currentSaldo += k.nominal;
+                    state.kas.sort((a,b) => new Date(a.created_at||a.tanggal) - new Date(b.created_at||b.tanggal));
+                    for (const k of state.kas) {
+                        if (k.jenis === 'Masuk') currentSaldo += k.nominal;
                         else currentSaldo -= k.nominal;
                         k.saldo = currentSaldo;
-                    });
+                        await sb.from('kas').update({ saldo: k.saldo }).eq('id', k.id);
+                    }
                     state.saldoKas = currentSaldo;
+                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
                 }
-                return {success: true};
+                return { success: true };
             }
+
+            // ============= HAPUS PENJUALAN =============
             if (action === 'hapusPenjualanServer') {
                 const pjIndex = state.penjualan.findIndex(p => p.id === payload.id);
-                if(pjIndex > -1) {
+                if (pjIndex > -1) {
                     const pj = state.penjualan[pjIndex];
-                    
-                    // Kembalikan Stok Barang
+                    // Kembalikan stok
                     if (pj.items) {
-                        pj.items.forEach(i => {
-                            const b = state.barang.find(x => x.kode === i.kode);
-                            if(b) b.stok += parseInt(i.qty);
-                        });
+                        for (const item of pj.items) {
+                            const b = state.barang.find(x => x.kode === item.kode);
+                            if (b) {
+                                b.stok += parseInt(item.qty);
+                                await sb.from('barang').update({ stok: b.stok, updated_at: new Date().toISOString() }).eq('kode', item.kode);
+                            }
+                        }
                     }
-
-                    // Hapus pencatatan pada Kas / Piutang
-                    if(pj.metode !== 'Piutang') {
-                        const kasIndex = state.kas.findIndex(k => k.keterangan.includes(pj.id));
-                        if(kasIndex > -1) state.kas.splice(kasIndex, 1);
-                    } else {
-                        const ptIndex = state.piutang.findIndex(p => p.id_ref === pj.id);
-                        if(ptIndex > -1) state.piutang.splice(ptIndex, 1);
-                    }
-                    
-                    // Hapus data penjualan dari state
+                    // Hapus penjualan
+                    await sb.from('penjualan').delete().eq('id', payload.id);
                     state.penjualan.splice(pjIndex, 1);
 
-                    // Kalkulasi ulang seluruh saldo kas agar tetap presisi
+                    // Hapus kas atau piutang terkait
+                    if (pj.metode !== 'Piutang') {
+                        const kasIndex = state.kas.findIndex(k => k.keterangan && k.keterangan.includes(pj.id));
+                        if (kasIndex > -1) {
+                            await sb.from('kas').delete().eq('id', state.kas[kasIndex].id);
+                            state.kas.splice(kasIndex, 1);
+                        }
+                    } else {
+                        const ptIndex = state.piutang.findIndex(p => p.id_ref === pj.id);
+                        if (ptIndex > -1) {
+                            await sb.from('piutang').delete().eq('id', state.piutang[ptIndex].id);
+                            state.piutang.splice(ptIndex, 1);
+                        }
+                    }
+                    // Recalculate saldo kas
                     let currentSaldo = 0;
-                    state.kas.forEach(k => {
-                        if(k.jenis === 'Masuk') currentSaldo += k.nominal;
+                    for (const k of state.kas) {
+                        if (k.jenis === 'Masuk') currentSaldo += k.nominal;
                         else currentSaldo -= k.nominal;
                         k.saldo = currentSaldo;
-                    });
+                        await sb.from('kas').update({ saldo: k.saldo }).eq('id', k.id);
+                    }
                     state.saldoKas = currentSaldo;
+                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
                 }
-                return {success: true};
+                return { success: true };
             }
+
+            // ============= PEMBELIAN =============
             if (action === 'simpanPembelianServer') {
                 const id_pb = 'PB' + Date.now().toString().slice(-6);
-                payload.items.forEach(i => { const b = state.barang.find(x => x.kode === i.kode); if(b) { b.stok += parseInt(i.qty); b.harga_beli = i.harga_beli; } });
-                state.pembelian.push({ id: id_pb, tanggal: today, supplier: payload.supplier, total: payload.total, status_bayar: payload.metode === 'Hutang' ? 'Hutang' : 'Lunas' });
-                
-                if(payload.metode !== 'Hutang') { 
+                // Update stok barang
+                for (const item of payload.items) {
+                    const b = state.barang.find(x => x.kode === item.kode);
+                    if (b) {
+                        b.stok += parseInt(item.qty);
+                        b.harga_beli = item.harga_beli;
+                        await sb.from('barang').update({ stok: b.stok, harga_beli: b.harga_beli, updated_at: new Date().toISOString() }).eq('kode', item.kode);
+                    }
+                }
+                const pbEntry = {
+                    id: id_pb, tanggal: today, supplier: payload.supplier,
+                    total: payload.total, status_bayar: payload.metode === 'Hutang' ? 'Hutang' : 'Lunas',
+                    items: payload.items
+                };
+                await sb.from('pembelian').insert(pbEntry);
+                state.pembelian.push(pbEntry);
+
+                if (payload.metode !== 'Hutang') {
                     state.saldoKas -= payload.total;
-                    state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Keluar', kategori: 'Pembelian', keterangan: 'Ke ' + payload.supplier, nominal: payload.total, saldo: state.saldoKas });
-                } else { 
-                    state.hutang.push({ id: 'HT'+Date.now(), id_ref: id_pb, supplier: payload.supplier, nominal_awal: payload.total, sisa_hutang: payload.total, status: 'Belum Lunas' });
+                    const kasEntry = {
+                        id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar',
+                        kategori: 'Pembelian', keterangan: 'Ke ' + payload.supplier,
+                        nominal: payload.total, saldo: state.saldoKas
+                    };
+                    await sb.from('kas').insert(kasEntry);
+                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                    state.kas.push(kasEntry);
+                } else {
+                    const htEntry = {
+                        id: 'HT' + Date.now(), id_ref: id_pb, supplier: payload.supplier,
+                        nominal_awal: payload.total, sisa_hutang: payload.total, status: 'Belum Lunas'
+                    };
+                    await sb.from('hutang').insert(htEntry);
+                    state.hutang.push(htEntry);
                 }
                 return { success: true };
             }
+
+            // ============= RETURN =============
             if (action === 'simpanReturnServer') {
-                state.retur.push({ id: 'RT'+Date.now(), tanggal: today, jenis: payload.jenis, kode_barang: payload.kode_barang, qty: payload.qty, keterangan: payload.ket });
+                const rtEntry = {
+                    id: 'RT' + Date.now(), tanggal: today, jenis: payload.jenis,
+                    kode_barang: payload.kode_barang, qty: payload.qty, keterangan: payload.ket
+                };
+                await sb.from('retur').insert(rtEntry);
+                state.retur.push(rtEntry);
                 const b = state.barang.find(x => x.kode === payload.kode_barang);
-                if(b) { if(payload.jenis === 'Dari Pelanggan') b.stok += parseInt(payload.qty); else b.stok -= parseInt(payload.qty); }
+                if (b) {
+                    if (payload.jenis === 'Dari Pelanggan') b.stok += parseInt(payload.qty);
+                    else b.stok -= parseInt(payload.qty);
+                    await sb.from('barang').update({ stok: b.stok, updated_at: new Date().toISOString() }).eq('kode', payload.kode_barang);
+                }
                 return { success: true };
             }
+
+            // ============= BIAYA OPERASIONAL =============
             if (action === 'simpanBiayaServer') {
-                state.biaya.push({ id: 'BY'+Date.now(), tanggal: today, kategori: payload.kategori, keterangan: payload.ket, nominal: payload.nominal });
                 state.saldoKas -= payload.nominal;
-                state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Keluar', kategori: 'Biaya', keterangan: payload.ket, nominal: payload.nominal, saldo: state.saldoKas });
+                const byEntry = {
+                    id: 'BY' + Date.now(), tanggal: today,
+                    kategori: payload.kategori, keterangan: payload.ket, nominal: payload.nominal
+                };
+                await sb.from('biaya').insert(byEntry);
+                state.biaya.push(byEntry);
+                const kasEntry = {
+                    id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar',
+                    kategori: 'Biaya', keterangan: payload.ket,
+                    nominal: payload.nominal, saldo: state.saldoKas
+                };
+                await sb.from('kas').insert(kasEntry);
+                await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                state.kas.push(kasEntry);
                 return { success: true };
             }
+
+            // ============= BAYAR HUTANG / TERIMA PIUTANG =============
             if (action === 'prosesBayarHPServer') {
-                if(payload.type === 'hutang') {
+                if (payload.type === 'hutang') {
                     const h = state.hutang.find(x => x.id === payload.id);
                     h.sisa_hutang -= payload.nominal;
-                    if(h.sisa_hutang <= 0) h.status = 'Lunas';
+                    if (h.sisa_hutang <= 0) { h.sisa_hutang = 0; h.status = 'Lunas'; }
+                    await sb.from('hutang').update({ sisa_hutang: h.sisa_hutang, status: h.status, updated_at: new Date().toISOString() }).eq('id', payload.id);
                     state.saldoKas -= payload.nominal;
-                    state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Keluar', kategori: 'Hutang', keterangan: 'Bayar Hutang ' + h.id_ref, nominal: payload.nominal, saldo: state.saldoKas });
+                    const kasEntry = {
+                        id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar',
+                        kategori: 'Hutang', keterangan: 'Bayar Hutang ' + h.id_ref,
+                        nominal: payload.nominal, saldo: state.saldoKas
+                    };
+                    await sb.from('kas').insert(kasEntry);
+                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                    state.kas.push(kasEntry);
                 } else {
                     const p = state.piutang.find(x => x.id === payload.id);
                     p.sisa_piutang -= payload.nominal;
-                    if(p.sisa_piutang <= 0) p.status = 'Lunas';
+                    if (p.sisa_piutang <= 0) { p.sisa_piutang = 0; p.status = 'Lunas'; }
+                    await sb.from('piutang').update({ sisa_piutang: p.sisa_piutang, status: p.status, updated_at: new Date().toISOString() }).eq('id', payload.id);
                     state.saldoKas += payload.nominal;
-                    state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Masuk', kategori: 'Piutang', keterangan: 'Terima Piutang ' + p.id_ref, nominal: payload.nominal, saldo: state.saldoKas });
+                    const kasEntry = {
+                        id: 'K' + Date.now(), tanggal: today, jenis: 'Masuk',
+                        kategori: 'Piutang', keterangan: 'Terima Piutang ' + p.id_ref,
+                        nominal: payload.nominal, saldo: state.saldoKas
+                    };
+                    await sb.from('kas').insert(kasEntry);
+                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                    state.kas.push(kasEntry);
                 }
                 return { success: true };
             }
-            return { success: false };
+
+            return { success: false, message: 'Action tidak dikenal: ' + action };
         }
+
 
         /** =========================================================================
          * AUTH, NAVIGATION & RESPONSIVE LAYOUT
@@ -1088,7 +1271,7 @@
 
         async function loadDataAwal() {
             const res = await callBackend('getDataAwal', null);
-            if (res.success && !IS_PREVIEW) { state.barang = res.data.barang || state.barang; state.kas = res.data.kas || state.kas; state.penjualan = res.data.penjualan || state.penjualan; state.pembelian = res.data.pembelian || state.pembelian; state.biaya = res.data.biaya || state.biaya; state.hutang = res.data.hutang || state.hutang; state.piutang = res.data.piutang || state.piutang; state.retur = res.data.retur || state.retur; state.saldoKas = res.data.saldoKas ?? state.saldoKas; state.settings = res.data.settings || state.settings; }
+            if (res.success) { state.barang = res.data.barang || []; state.kas = res.data.kas || []; state.penjualan = res.data.penjualan || []; state.pembelian = res.data.pembelian || []; state.biaya = res.data.biaya || []; state.hutang = res.data.hutang || []; state.piutang = res.data.piutang || []; state.retur = res.data.retur || []; state.saldoKas = res.data.saldoKas ?? 0; state.settings = res.data.settings || state.settings; }
         }
 
         function navigate(menu) {
@@ -1162,7 +1345,7 @@
                 };
                 
                 await callBackend('simpanSettingsServer', payload);
-                if(IS_PREVIEW) state.settings = payload;
+                // settings sudah disimpan di supabaseBackend
                 applySettingsUI();
                 
                 // Clear input
