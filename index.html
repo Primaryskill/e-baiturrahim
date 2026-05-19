@@ -71,11 +71,7 @@
                     <button type="submit" id="btn-login" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
                         Login Sekarang
                     </button>
-                    <div class="mt-6 p-4 bg-blue-50 rounded-xl text-xs text-blue-800 text-left border border-blue-100">
-                        <b class="text-sm block mb-1">Preview Akun (Demo):</b>
-                        <div class="flex justify-between mb-1"><span>Admin:</span> <span class="font-mono bg-white px-2 py-0.5 rounded border">admin / edudigital</span></div>
-                        <div class="flex justify-between"><span>Kasir:</span> <span class="font-mono bg-white px-2 py-0.5 rounded border">peserta / edudigital</span></div>
-                    </div>
+
                 </form>
             </div>
         </div>
@@ -1178,7 +1174,25 @@
         /** =========================================================================
          * AUTH, NAVIGATION & RESPONSIVE LAYOUT
          * ========================================================================= */
-        applySettingsUI(); // On load
+        // Load settings dari Supabase saat halaman pertama dibuka
+        // agar background login & nama app muncul tanpa perlu login dulu
+        async function initApp() {
+            try {
+                const { data: settings } = await sb.from('settings').select('*').limit(1).single();
+                if (settings) {
+                    state.settings = {
+                        appName: settings.app_name || 'E-Baiturrahim',
+                        appIcon: settings.app_icon || 'fa-store',
+                        loginBg: settings.login_bg || ''
+                    };
+                }
+            } catch(e) {
+                // Jika gagal (koneksi/konfigurasi belum diisi), pakai default
+                console.warn('Tidak bisa load settings awal:', e.message);
+            }
+            applySettingsUI();
+        }
+        initApp();
 
         // Fitur Responsif Hamburger Menu
         function toggleSidebar() {
