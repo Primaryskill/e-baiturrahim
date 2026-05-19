@@ -41,8 +41,11 @@
 
     <div id="app-container">
         <!-- LOGIN VIEW -->
-        <div id="login-view" class="flex h-screen items-center justify-center bg-slate-100">
-            <div class="bg-white p-8 rounded-2xl shadow-2xl w-96 max-w-full border-t-4 border-emerald-600">
+        <div id="login-view" class="relative flex h-screen items-center justify-center bg-slate-100 overflow-hidden">
+            <!-- Background Login dengan Opacity 50% -->
+            <div id="login-bg-image" class="absolute inset-0 bg-cover bg-center opacity-50 hidden transition-all duration-500"></div>
+            
+            <div class="relative z-10 bg-white p-8 rounded-2xl shadow-2xl w-96 max-w-full border-t-4 border-emerald-600 m-4">
                 <div class="text-center mb-6">
                     <i class="fas fa-store text-5xl text-emerald-600 mb-3 app-icon-display"></i>
                     <h1 class="text-2xl font-black text-slate-800 app-name-display">E-Baiturrahim</h1>
@@ -71,12 +74,19 @@
         </div>
 
         <!-- MAIN LAYOUT -->
-        <div id="main-layout" class="hidden h-screen overflow-hidden bg-slate-100" style="flex-direction:row;">
+        <div id="main-layout" class="hidden h-screen overflow-hidden bg-slate-100 flex-row relative">
+            
+            <!-- Overlay untuk Sidebar di Mobile -->
+            <div id="sidebar-overlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
             <!-- Sidebar -->
-            <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col transition-all duration-300 z-20 shadow-2xl relative">
-                <div class="h-16 flex items-center justify-center border-b border-slate-800 bg-slate-950">
-                    <i class="fas fa-store text-xl text-emerald-500 mr-2 app-icon-display"></i>
-                    <h2 class="text-lg font-black text-white app-name-display truncate px-2">E-Baiturrahim</h2>
+            <aside id="app-sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 z-50 shadow-2xl fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 h-full">
+                <div class="h-16 flex items-center justify-between md:justify-center border-b border-slate-800 bg-slate-950 px-4 md:px-2">
+                    <div class="flex items-center">
+                        <i class="fas fa-store text-xl text-emerald-500 mr-2 app-icon-display"></i>
+                        <h2 class="text-lg font-black text-white app-name-display truncate px-2">E-Baiturrahim</h2>
+                    </div>
+                    <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
                 </div>
                 <nav class="flex-1 overflow-y-auto py-4 custom-scrollbar">
                     <ul class="space-y-1 px-3">
@@ -107,9 +117,14 @@
             <!-- Main Content Area -->
             <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
                 <!-- Header -->
-                <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10 border-b border-slate-200">
-                    <h2 id="page-title" class="text-xl font-black text-slate-800">Dashboard</h2>
-                    <div id="loading-indicator" class="hidden bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200 text-emerald-700 text-sm font-bold shadow-sm"><i class="fas fa-spinner fa-spin mr-2"></i> Memproses Data...</div>
+                <header class="h-16 bg-white shadow-sm flex items-center justify-between px-4 md:px-6 z-10 border-b border-slate-200 shrink-0">
+                    <div class="flex items-center">
+                        <button onclick="toggleSidebar()" class="md:hidden mr-4 text-slate-600 hover:text-emerald-600 focus:outline-none transition-colors">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <h2 id="page-title" class="text-lg md:text-xl font-black text-slate-800 truncate">Dashboard</h2>
+                    </div>
+                    <div id="loading-indicator" class="hidden bg-emerald-50 px-4 py-2 rounded-full border border-emerald-200 text-emerald-700 text-sm font-bold shadow-sm"><i class="fas fa-spinner fa-spin mr-2"></i> Memproses...</div>
                 </header>
 
                 <!-- Scrollable Content -->
@@ -118,35 +133,35 @@
                     <!-- VIEW: DASHBOARD -->
                     <div id="view-dashboard" class="view-section">
                         <!-- Stats Cards -->
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
                             <div class="bg-white rounded-2xl shadow-sm p-6 border-b-4 border-emerald-500 hover:shadow-md transition relative overflow-hidden">
                                 <div class="flex justify-between items-start relative z-10">
                                     <div>
-                                        <p class="text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Saldo Kas Aktif</p>
-                                        <h3 class="text-2xl font-black text-slate-800" id="dash-saldo">Rp 0</h3>
+                                        <p class="text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Saldo Kas Aktif</p>
+                                        <h3 class="text-xl md:text-2xl font-black text-slate-800" id="dash-saldo">Rp 0</h3>
                                     </div>
-                                    <div class="bg-emerald-100 p-3 rounded-xl"><i class="fas fa-wallet text-xl text-emerald-600"></i></div>
+                                    <div class="bg-emerald-100 p-2 md:p-3 rounded-xl"><i class="fas fa-wallet text-lg md:text-xl text-emerald-600"></i></div>
                                 </div>
                                 <button onclick="openModalKasAwal()" class="mt-4 w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-bold py-2 rounded-lg border border-emerald-200 transition"><i class="fas fa-plus-circle mr-1"></i> Tambah Modal/Kas</button>
                             </div>
                             <div class="bg-white rounded-2xl shadow-sm p-6 border-b-4 border-blue-500 hover:shadow-md transition">
                                 <div class="flex justify-between items-start">
-                                    <div><p class="text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Total Piutang</p><h3 class="text-2xl font-black text-blue-600" id="dash-piutang">Rp 0</h3></div>
-                                    <div class="bg-blue-100 p-3 rounded-xl"><i class="fas fa-hand-holding-usd text-xl text-blue-600"></i></div>
+                                    <div><p class="text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Total Piutang</p><h3 class="text-xl md:text-2xl font-black text-blue-600" id="dash-piutang">Rp 0</h3></div>
+                                    <div class="bg-blue-100 p-2 md:p-3 rounded-xl"><i class="fas fa-hand-holding-usd text-lg md:text-xl text-blue-600"></i></div>
                                 </div>
                                 <div class="mt-4 text-xs font-medium text-slate-400">Tagihan ke pelanggan</div>
                             </div>
                             <div class="bg-white rounded-2xl shadow-sm p-6 border-b-4 border-rose-500 hover:shadow-md transition">
                                 <div class="flex justify-between items-start">
-                                    <div><p class="text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Total Hutang</p><h3 class="text-2xl font-black text-rose-600" id="dash-hutang">Rp 0</h3></div>
-                                    <div class="bg-rose-100 p-3 rounded-xl"><i class="fas fa-file-invoice-dollar text-xl text-rose-600"></i></div>
+                                    <div><p class="text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Total Hutang</p><h3 class="text-xl md:text-2xl font-black text-rose-600" id="dash-hutang">Rp 0</h3></div>
+                                    <div class="bg-rose-100 p-2 md:p-3 rounded-xl"><i class="fas fa-file-invoice-dollar text-lg md:text-xl text-rose-600"></i></div>
                                 </div>
                                 <div class="mt-4 text-xs font-medium text-slate-400">Beban ke supplier</div>
                             </div>
                             <div class="bg-white rounded-2xl shadow-sm p-6 border-b-4 border-orange-500 hover:shadow-md transition">
                                 <div class="flex justify-between items-start">
-                                    <div><p class="text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Stok Menipis</p><h3 class="text-2xl font-black text-orange-600" id="dash-stok">0</h3></div>
-                                    <div class="bg-orange-100 p-3 rounded-xl"><i class="fas fa-exclamation-triangle text-xl text-orange-600"></i></div>
+                                    <div><p class="text-xs md:text-sm text-slate-500 font-bold uppercase tracking-wider mb-1">Stok Menipis</p><h3 class="text-xl md:text-2xl font-black text-orange-600" id="dash-stok">0</h3></div>
+                                    <div class="bg-orange-100 p-2 md:p-3 rounded-xl"><i class="fas fa-exclamation-triangle text-lg md:text-xl text-orange-600"></i></div>
                                 </div>
                                 <div class="mt-4 text-xs font-medium text-slate-400">Barang dengan stok &le; 10</div>
                             </div>
@@ -154,7 +169,7 @@
                         
                         <div class="grid grid-cols-1 gap-6">
                             <!-- Low Stock List -->
-                            <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100 flex flex-col">
+                            <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100 flex flex-col">
                                 <h3 class="font-bold text-slate-800 mb-4 border-b pb-2 flex justify-between items-center">
                                     <span><i class="fas fa-boxes text-orange-500 mr-2"></i>Peringatan Stok</span>
                                     <span class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full animate-pulse"><i class="fas fa-bell"></i></span>
@@ -168,26 +183,31 @@
 
                     <!-- VIEW: PENGATURAN -->
                     <div id="view-pengaturan" class="view-section hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
                             <!-- Profil Aplikasi -->
-                            <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                            <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100">
                                 <h3 class="text-lg font-black text-slate-800 mb-4 border-b pb-2"><i class="fas fa-store text-emerald-500 mr-2"></i>Profil Aplikasi</h3>
                                 <form onsubmit="saveSettings(event)">
                                     <div class="mb-4">
                                         <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Nama Aplikasi</label>
                                         <input type="text" id="set-app-name" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 bg-slate-50 font-bold" required>
                                     </div>
-                                    <div class="mb-6">
+                                    <div class="mb-4">
                                         <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Ikon Aplikasi (Class FontAwesome)</label>
                                         <input type="text" id="set-app-icon" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 font-mono text-sm" placeholder="Contoh: fa-store, fa-shopping-cart" required>
                                         <p class="text-xs text-slate-400 mt-2">Referensi: <a href="https://fontawesome.com/search?o=r&m=free" target="_blank" class="text-emerald-600 underline">FontAwesome Free</a></p>
+                                    </div>
+                                    <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                        <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Background Layar Login (Opsional)</label>
+                                        <input type="file" id="set-login-bg" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-emerald-100 file:text-emerald-700 hover:file:bg-emerald-200 cursor-pointer">
+                                        <p class="text-xs text-slate-500 mt-2"><i class="fas fa-info-circle mr-1"></i>Gambar otomatis diberi efek transparan (opacity 50%) agar form login tetap jelas terbaca.</p>
                                     </div>
                                     <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow transition"><i class="fas fa-save mr-2"></i>Simpan Profil</button>
                                 </form>
                             </div>
 
                             <!-- Backup & Restore -->
-                            <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                            <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100">
                                 <h3 class="text-lg font-black text-slate-800 mb-4 border-b pb-2"><i class="fas fa-database text-blue-500 mr-2"></i>Backup & Restore Data</h3>
                                 <p class="text-sm text-slate-500 mb-6">Amankan data Anda dengan mendownload backup. Anda dapat mengembalikannya kapan saja melalui fitur Restore.</p>
                                 
@@ -199,7 +219,7 @@
                                 <div class="p-4 bg-orange-50 rounded-xl border border-orange-200">
                                     <h4 class="text-sm font-bold text-orange-800 mb-2">Restore Data (Impor)</h4>
                                     <p class="text-xs text-orange-600 mb-3">Peringatan: Proses ini akan menimpa seluruh data saat ini secara permanen!</p>
-                                    <input type="file" id="restore-file" accept=".json" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200 mb-3">
+                                    <input type="file" id="restore-file" accept=".json" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-orange-100 file:text-orange-700 hover:file:bg-orange-200 mb-3 cursor-pointer">
                                     <button onclick="restoreData()" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 rounded-xl shadow transition"><i class="fas fa-upload mr-2"></i>Jalankan Restore</button>
                                 </div>
                             </div>
@@ -208,7 +228,7 @@
 
                     <!-- VIEW: MASTER BARANG -->
                     <div id="view-barang" class="view-section hidden">
-                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                        <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100">
                             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                                 <div class="w-full md:w-1/2 relative">
                                     <i class="fas fa-search absolute left-4 top-3.5 text-slate-400"></i>
@@ -217,7 +237,7 @@
                                 <button onclick="openModalBarang()" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition"><i class="fas fa-plus mr-2"></i>Tambah Barang Baru</button>
                             </div>
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                <table class="w-full text-left border-collapse whitespace-nowrap">
+                                <table class="w-full text-left border-collapse whitespace-nowrap min-w-max">
                                     <thead>
                                         <tr class="bg-slate-800 text-white text-sm">
                                             <th class="p-4 font-semibold rounded-tl-lg">Kode</th>
@@ -239,9 +259,10 @@
 
                     <!-- VIEW: PENJUALAN (POS) -->
                     <div id="view-penjualan" class="view-section hidden">
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
+                        <!-- Tampilan diubah jadi Flex Col untuk Mobile, dan Grid Grid-cols-3 untuk Desktop -->
+                        <div class="flex flex-col lg:grid lg:grid-cols-3 gap-6 h-auto lg:h-[calc(100vh-9rem)]">
                             <!-- Produk / Pencarian -->
-                            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-4 flex flex-col border border-slate-100">
+                            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-4 flex flex-col border border-slate-100 h-[55vh] lg:h-auto">
                                 <div class="mb-4 relative">
                                     <i class="fas fa-barcode absolute left-4 top-3.5 text-slate-400 text-lg"></i>
                                     <input type="text" id="search-pos" onkeyup="renderPosProducts()" placeholder="Ketik Nama Barang / Scan Barcode..." class="w-full pl-12 pr-4 py-3 border-2 border-emerald-100 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 text-lg bg-emerald-50/50 font-medium">
@@ -252,38 +273,38 @@
                             </div>
                             
                             <!-- Keranjang / Checkout -->
-                            <div class="bg-white rounded-2xl shadow-sm flex flex-col border border-slate-200 overflow-hidden">
-                                <div class="p-4 bg-slate-900 text-white flex justify-between items-center shadow-md z-10">
+                            <div class="bg-white rounded-2xl shadow-sm flex flex-col border border-slate-200 overflow-hidden h-[55vh] lg:h-auto">
+                                <div class="p-4 bg-slate-900 text-white flex justify-between items-center shadow-md z-10 shrink-0">
                                     <h3 class="font-black text-lg tracking-wide"><i class="fas fa-shopping-cart text-emerald-400 mr-2"></i>KERANJANG</h3>
                                     <button onclick="clearCart()" class="text-rose-400 hover:text-rose-300 text-sm font-bold transition bg-rose-900/30 px-3 py-1 rounded-lg"><i class="fas fa-trash-alt mr-1"></i> Kosongkan</button>
                                 </div>
                                 <div class="flex-1 overflow-y-auto p-4 custom-scrollbar bg-slate-50/50" id="pos-cart-items">
                                     <!-- Rendered via JS -->
                                 </div>
-                                <div class="p-5 bg-white border-t border-slate-200 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                                <div class="p-4 md:p-5 bg-white border-t border-slate-200 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] z-10 shrink-0">
                                     <div class="flex justify-between mb-2 text-slate-500 text-sm font-bold">
                                         <span>Subtotal</span>
                                         <span id="pos-subtotal" class="text-slate-700">Rp 0</span>
                                     </div>
-                                    <div class="flex justify-between mb-5 text-2xl font-black text-emerald-700 border-b-2 border-emerald-100 pb-3">
+                                    <div class="flex justify-between mb-4 md:mb-5 text-xl md:text-2xl font-black text-emerald-700 border-b-2 border-emerald-100 pb-3">
                                         <span>Total</span>
                                         <span id="pos-total">Rp 0</span>
                                     </div>
-                                    <div class="space-y-4 mb-6">
+                                    <div class="space-y-4 mb-4 md:mb-6">
                                         <div>
                                             <label class="text-xs font-black text-slate-700 block mb-2 uppercase tracking-wider">Metode Bayar</label>
-                                            <select id="pos-payment-method" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 font-bold text-slate-700" onchange="togglePiutangField()">
-                                                <option value="Cash">💵 Cash / Tunai</option>
+                                            <select id="pos-payment-method" class="w-full p-2.5 md:p-3 border-2 border-slate-200 rounded-xl focus:ring-emerald-500 focus:border-emerald-500 font-bold text-slate-700 text-sm md:text-base" onchange="togglePiutangField()">
+                                                <option value="Cash">💰 Cash / Tunai</option>
                                                 <option value="QRIS">📱 QRIS / Transfer Bank</option>
-                                                <option value="Piutang">📝 Hutang Pelanggan (Kasbon)</option>
+                                                <option value="Piutang">📒 Hutang Pelanggan (Kasbon)</option>
                                             </select>
                                         </div>
                                         <div id="pos-customer-field" class="hidden transition-all bg-orange-50 p-3 rounded-xl border border-orange-200">
                                             <label class="text-xs font-black text-orange-800 block mb-2 uppercase tracking-wider">Nama Pelanggan <span class="text-rose-500">*</span></label>
-                                            <input type="text" id="pos-customer-name" class="w-full p-3 border border-orange-300 rounded-lg focus:ring-orange-500 font-bold" placeholder="Wajib diisi jika Kasbon">
+                                            <input type="text" id="pos-customer-name" class="w-full p-2.5 md:p-3 border border-orange-300 rounded-lg focus:ring-orange-500 font-bold text-sm md:text-base" placeholder="Wajib diisi jika Kasbon">
                                         </div>
                                     </div>
-                                    <button onclick="prosesCheckout()" id="btn-checkout" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                                    <button onclick="prosesCheckout()" id="btn-checkout" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-3 md:py-4 rounded-xl text-base md:text-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                                         <i class="fas fa-print mr-2"></i> PROSES & CETAK
                                     </button>
                                 </div>
@@ -293,8 +314,8 @@
 
                     <!-- VIEW: PEMBELIAN (RESTOCK) -->
                     <div id="view-pembelian" class="view-section hidden">
-                        <div class="bg-white rounded-2xl shadow-sm p-6 md:p-8 border border-slate-100 max-w-5xl mx-auto">
-                            <h3 class="text-2xl font-black text-slate-800 mb-6 border-b-2 border-slate-100 pb-4"><i class="fas fa-truck-loading text-emerald-600 mr-3"></i>Form Penerimaan Barang (Restock)</h3>
+                        <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 lg:p-8 border border-slate-100 max-w-5xl mx-auto">
+                            <h3 class="text-xl md:text-2xl font-black text-slate-800 mb-6 border-b-2 border-slate-100 pb-4"><i class="fas fa-truck-loading text-emerald-600 mr-3"></i>Form Penerimaan Barang (Restock)</h3>
                             
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                                 <div>
@@ -314,26 +335,28 @@
                                 </div>
                             </div>
                             
-                            <div class="border-2 border-slate-100 rounded-2xl p-6 mb-8 bg-slate-50/50">
+                            <div class="border-2 border-slate-100 rounded-2xl p-4 md:p-6 mb-8 bg-slate-50/50">
                                 <h4 class="font-black text-slate-700 mb-4 text-sm uppercase tracking-wider"><i class="fas fa-list-ul mr-2"></i>Pilih Barang Masuk</h4>
                                 <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 mb-6">
                                     <select id="beli-pilih-barang" class="flex-1 p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 bg-white font-bold text-slate-700">
                                         <option value="">-- Cari & Pilih Barang --</option>
                                         <!-- Rendered via JS -->
                                     </select>
-                                    <div class="relative w-full md:w-32">
-                                        <span class="absolute left-3 top-3.5 text-xs font-bold text-slate-400">Qty</span>
-                                        <input type="number" id="beli-qty" class="w-full pl-10 p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 font-bold" min="1">
+                                    <div class="flex space-x-2 md:space-x-4">
+                                        <div class="relative flex-1 md:w-32">
+                                            <span class="absolute left-3 top-3.5 text-xs font-bold text-slate-400">Qty</span>
+                                            <input type="number" id="beli-qty" class="w-full pl-10 p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 font-bold" min="1">
+                                        </div>
+                                        <div class="relative flex-1 md:w-48">
+                                            <span class="absolute left-3 top-3.5 text-xs font-bold text-slate-400">Rp</span>
+                                            <input type="number" id="beli-harga" placeholder="Harga Beli" class="w-full pl-9 p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 font-bold">
+                                        </div>
                                     </div>
-                                    <div class="relative w-full md:w-48">
-                                        <span class="absolute left-3 top-3.5 text-xs font-bold text-slate-400">Rp</span>
-                                        <input type="number" id="beli-harga" placeholder="Harga Beli" class="w-full pl-9 p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 font-bold">
-                                    </div>
-                                    <button onclick="addBeliItem()" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 shadow-md transition font-black"><i class="fas fa-plus mr-2"></i>TAMBAH</button>
+                                    <button onclick="addBeliItem()" class="w-full md:w-auto bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 shadow-md transition font-black"><i class="fas fa-plus mr-2"></i>TAMBAH</button>
                                 </div>
                                 
                                 <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                    <table class="w-full text-sm text-left bg-white">
+                                    <table class="w-full text-sm text-left bg-white min-w-max">
                                         <thead class="bg-slate-800 text-white">
                                             <tr>
                                                 <th class="p-4 font-semibold">Nama Barang</th>
@@ -350,16 +373,16 @@
                                 </div>
                             </div>
                             
-                            <div class="flex flex-col sm:flex-row justify-between items-center bg-emerald-50 border-2 border-emerald-100 p-6 rounded-2xl">
-                                <div class="text-emerald-800 font-bold mb-2 sm:mb-0 text-center sm:text-left">
+                            <div class="flex flex-col sm:flex-row justify-between items-center bg-emerald-50 border-2 border-emerald-100 p-4 md:p-6 rounded-2xl">
+                                <div class="text-emerald-800 font-bold mb-3 sm:mb-0 text-center sm:text-left">
                                     TOTAL TAGIHAN PEMBELIAN<br>
                                     <span class="text-xs font-medium text-emerald-600 bg-emerald-100 px-2 py-1 rounded inline-block mt-1">Pastikan rincian sudah sesuai</span>
                                 </div>
-                                <div class="text-4xl font-black text-emerald-700" id="beli-total-display">Rp 0</div>
+                                <div class="text-2xl md:text-4xl font-black text-emerald-700" id="beli-total-display">Rp 0</div>
                             </div>
                             
                             <div class="mt-8 flex justify-end">
-                                <button onclick="prosesPembelian()" id="btn-simpan-beli" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 px-10 rounded-xl shadow-xl transition-transform transform hover:-translate-y-1 disabled:opacity-50 text-lg">
+                                <button onclick="prosesPembelian()" id="btn-simpan-beli" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-black py-4 px-10 rounded-xl shadow-xl transition-transform transform hover:-translate-y-1 disabled:opacity-50 text-base md:text-lg">
                                     <i class="fas fa-save mr-2"></i> SIMPAN TRANSAKSI
                                 </button>
                             </div>
@@ -368,16 +391,16 @@
 
                     <!-- VIEW: RETURN BARANG -->
                     <div id="view-return" class="view-section hidden">
-                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                        <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                                 <div>
                                     <h3 class="text-xl font-black text-slate-800"><i class="fas fa-exchange-alt text-orange-500 mr-2"></i>Pencatatan Return Barang</h3>
                                     <p class="text-sm text-slate-500 font-medium mt-1">Catat barang yang dikembalikan pelanggan atau direturn ke supplier.</p>
                                 </div>
-                                <button onclick="openModalReturn()" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg font-bold transition"><i class="fas fa-plus mr-2"></i>Catat Return Baru</button>
+                                <button onclick="openModalReturn()" class="w-full md:w-auto bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl shadow-lg font-bold transition"><i class="fas fa-plus mr-2"></i>Catat Return Baru</button>
                             </div>
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                <table class="w-full text-left border-collapse">
+                                <table class="w-full text-left border-collapse min-w-max">
                                     <thead class="bg-slate-800 text-white text-sm">
                                         <tr>
                                             <th class="p-4 font-semibold">Tanggal</th>
@@ -398,16 +421,16 @@
 
                     <!-- VIEW: BIAYA OPERASIONAL -->
                     <div id="view-biaya" class="view-section hidden">
-                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                        <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                                 <div>
                                     <h3 class="text-xl font-black text-slate-800"><i class="fas fa-file-invoice-dollar text-red-500 mr-2"></i>Biaya Operasional</h3>
                                     <p class="text-sm text-slate-500 font-medium mt-1">Pencatatan pengeluaran toko. Otomatis memotong Saldo Kas.</p>
                                 </div>
-                                <button onclick="openModalBiaya()" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg font-bold transition"><i class="fas fa-plus mr-2"></i>Catat Biaya Baru</button>
+                                <button onclick="openModalBiaya()" class="w-full md:w-auto bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg font-bold transition"><i class="fas fa-plus mr-2"></i>Catat Biaya Baru</button>
                             </div>
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                <table class="w-full text-left border-collapse">
+                                <table class="w-full text-left border-collapse min-w-max">
                                     <thead class="bg-slate-800 text-white text-sm">
                                         <tr>
                                             <th class="p-4 font-semibold">Tanggal</th>
@@ -427,12 +450,12 @@
 
                     <!-- VIEW: HUTANG -->
                     <div id="view-hutang" class="view-section hidden">
-                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                        <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100">
                             <h3 class="text-xl font-black text-slate-800 mb-2"><i class="fas fa-hand-holding-usd text-rose-500 mr-2"></i>Daftar Hutang (Kepada Supplier)</h3>
                             <p class="text-sm text-slate-500 font-medium mb-6">Daftar tagihan yang harus dibayar toko kepada supplier akibat pembelian tempo.</p>
                             
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                <table class="w-full text-left border-collapse">
+                                <table class="w-full text-left border-collapse min-w-max">
                                     <thead class="bg-slate-800 text-white text-sm">
                                         <tr>
                                             <th class="p-4 font-semibold">Ref (ID Beli)</th>
@@ -453,12 +476,12 @@
 
                     <!-- VIEW: PIUTANG -->
                     <div id="view-piutang" class="view-section hidden">
-                        <div class="bg-white rounded-2xl shadow-sm p-6 border border-slate-100">
+                        <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100">
                             <h3 class="text-xl font-black text-slate-800 mb-2"><i class="fas fa-money-check-alt text-indigo-500 mr-2"></i>Daftar Piutang (Kasbon Pelanggan)</h3>
                             <p class="text-sm text-slate-500 font-medium mb-6">Daftar tagihan yang harus ditagih toko dari pelanggan akibat penjualan kredit/kasbon.</p>
                             
                             <div class="overflow-x-auto rounded-xl border border-slate-200">
-                                <table class="w-full text-left border-collapse">
+                                <table class="w-full text-left border-collapse min-w-max">
                                     <thead class="bg-slate-800 text-white text-sm">
                                         <tr>
                                             <th class="p-4 font-semibold">Ref (ID Jual)</th>
@@ -528,11 +551,11 @@
         <!-- MODAL BARANG -->
         <div id="modal-barang" class="hidden fixed inset-0 bg-slate-900 bg-opacity-60 z-50 flex items-center justify-center backdrop-blur-sm p-4">
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
-                <div class="bg-slate-800 p-5 text-white flex justify-between items-center">
+                <div class="bg-slate-800 p-4 md:p-5 text-white flex justify-between items-center">
                     <h3 class="font-black text-lg tracking-wide" id="modal-barang-title"><i class="fas fa-box text-emerald-400 mr-2"></i>Tambah Barang Baru</h3>
                     <button onclick="closeModalBarang()" class="text-slate-400 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
                 </div>
-                <form id="form-barang" onsubmit="simpanBarang(event)" class="p-6">
+                <form id="form-barang" onsubmit="simpanBarang(event)" class="p-4 md:p-6 max-h-[80vh] overflow-y-auto">
                     <input type="hidden" id="form-mode" value="add">
                     <input type="hidden" id="b-id">
                     <div class="mb-4">
@@ -587,8 +610,8 @@
                     <div class="mb-4">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Jenis Return</label>
                         <select id="ret-jenis" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-orange-500 font-bold text-slate-700" required>
-                            <option value="Dari Pelanggan">📦 Dari Pelanggan (Stok +)</option>
-                            <option value="Ke Supplier">🚚 Ke Supplier (Stok -)</option>
+                            <option value="Dari Pelanggan">🔄 Dari Pelanggan (Stok +)</option>
+                            <option value="Ke Supplier">🔙 Ke Supplier (Stok -)</option>
                         </select>
                     </div>
                     <div class="mb-4">
@@ -686,7 +709,7 @@
          * DATA DUMMY & STATE GLOBAL (DIPERBANYAK)
          * ========================================================================= */
         let state = {
-            settings: { appName: "E-Baiturrahim", appIcon: "fa-store" },
+            settings: { appName: "E-Baiturrahim", appIcon: "fa-store", loginBg: "" },
             user: null,
             barang: [
                 { id: '1', kode: 'BRG001', nama: 'Buku Tulis Sinar Dunia 38', kategori: 'Alat Tulis', harga_beli: 3000, harga_jual: 4500, stok: 45, satuan: 'pcs' },
@@ -746,9 +769,23 @@
         function applySettingsUI() {
             const n = state.settings?.appName || 'E-Baiturrahim';
             const i = state.settings?.appIcon || 'fa-store';
+            const bg = state.settings?.loginBg;
+
             document.querySelectorAll('.app-name-display').forEach(el => el.innerText = n);
             document.querySelectorAll('.app-icon-display').forEach(el => el.className = `fas ${i} mr-2 app-icon-display text-emerald-500`);
             document.title = n;
+
+            // Terapkan Background Login (Dengan Efek Opacity via class Tailwind `opacity-50` yang sudah dipasang di HTML)
+            const bgEl = document.getElementById('login-bg-image');
+            if (bgEl) {
+                if (bg && bg.trim() !== "") {
+                    bgEl.style.backgroundImage = `url(${bg})`;
+                    bgEl.classList.remove('hidden');
+                } else {
+                    bgEl.style.backgroundImage = 'none';
+                    bgEl.classList.add('hidden');
+                }
+            }
         }
 
         /** =========================================================================
@@ -799,10 +836,10 @@
                 const laba = payload.total - t_hpp;
                 state.penjualan.push({ id: id_pj, tanggal: today, pelanggan: payload.pelanggan || 'Umum', total: payload.total, metode: payload.metode, status_bayar: payload.metode === 'Piutang' ? 'Belum Lunas' : 'Lunas', laba: laba });
                 
-                if(payload.metode !== 'Piutang') { // Cash/QRIS -> Masuk Kas
+                if(payload.metode !== 'Piutang') { 
                     state.saldoKas += payload.total;
                     state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Masuk', kategori: 'Penjualan', keterangan: 'Penjualan ' + id_pj, nominal: payload.total, saldo: state.saldoKas });
-                } else { // Piutang -> Masuk tabel Piutang
+                } else { 
                     state.piutang.push({ id: 'PT'+Date.now(), id_ref: id_pj, pelanggan: payload.pelanggan, nominal_awal: payload.total, sisa_piutang: payload.total, status: 'Belum Lunas' });
                 }
                 return { success: true, id_transaksi: id_pj };
@@ -812,10 +849,10 @@
                 payload.items.forEach(i => { const b = state.barang.find(x => x.kode === i.kode); if(b) { b.stok += parseInt(i.qty); b.harga_beli = i.harga_beli; } });
                 state.pembelian.push({ id: id_pb, tanggal: today, supplier: payload.supplier, total: payload.total, status_bayar: payload.metode === 'Hutang' ? 'Hutang' : 'Lunas' });
                 
-                if(payload.metode !== 'Hutang') { // Cash -> Potong Kas
+                if(payload.metode !== 'Hutang') { 
                     state.saldoKas -= payload.total;
                     state.kas.push({ id: 'K'+Date.now(), tanggal: today, jenis: 'Keluar', kategori: 'Pembelian', keterangan: 'Ke ' + payload.supplier, nominal: payload.total, saldo: state.saldoKas });
-                } else { // Hutang -> Masuk tabel Hutang
+                } else { 
                     state.hutang.push({ id: 'HT'+Date.now(), id_ref: id_pb, supplier: payload.supplier, nominal_awal: payload.total, sisa_hutang: payload.total, status: 'Belum Lunas' });
                 }
                 return { success: true };
@@ -852,15 +889,29 @@
         }
 
         /** =========================================================================
-         * AUTH & NAVIGATION
+         * AUTH, NAVIGATION & RESPONSIVE LAYOUT
          * ========================================================================= */
         applySettingsUI(); // On load
+
+        // Fitur Responsif Hamburger Menu
+        function toggleSidebar() {
+            const sidebar = document.getElementById('app-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar.classList.contains('-translate-x-full')) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
 
         async function handleLogin(e) {
             e.preventDefault();
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
             const btn = document.getElementById('btn-login');
+            const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...'; btn.disabled = true;
 
             try {
@@ -890,7 +941,7 @@
                     errEl.innerText = res.message; errEl.classList.remove('hidden');
                 }
             } catch (e) { alert("Koneksi gagal."); } 
-            finally { btn.innerHTML = 'Login Sekarang'; btn.disabled = false; }
+            finally { btn.innerHTML = originalText; btn.disabled = false; }
         }
 
         function handleLogout() {
@@ -901,6 +952,12 @@
             document.getElementById('login-view').classList.remove('hidden');
             document.getElementById('login-form').reset();
             document.getElementById('login-error').classList.add('hidden');
+            
+            // Memastikan sidebar tertutup saat di mobile setelah logout
+            const sidebar = document.getElementById('app-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            if (sidebar) sidebar.classList.add('-translate-x-full');
+            if (overlay) overlay.classList.add('hidden');
         }
 
         async function loadDataAwal() {
@@ -935,24 +992,62 @@
             if(menu === 'pengaturan') { 
                 document.getElementById('set-app-name').value = state.settings?.appName || 'E-Baiturrahim';
                 document.getElementById('set-app-icon').value = state.settings?.appIcon || 'fa-store';
+                // Reset file input agar rapi tiap kali membuka pengaturan
+                document.getElementById('set-login-bg').value = ''; 
+            }
+
+            // Auto-close sidebar on mobile saat pindah menu
+            if (window.innerWidth < 768) {
+                const sidebar = document.getElementById('app-sidebar');
+                if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
+                    toggleSidebar();
+                }
             }
         }
 
         /** =========================================================================
-         * MODUL: PENGATURAN (BACKUP / RESTORE)
+         * MODUL: PENGATURAN (BACKUP / RESTORE / SETTINGS)
          * ========================================================================= */
         async function saveSettings(e) {
             e.preventDefault();
-            const payload = {
-                appName: document.getElementById('set-app-name').value,
-                appIcon: document.getElementById('set-app-icon').value
-            };
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...'; 
+            btn.disabled = true;
+
             try {
+                let bgBase64 = state.settings?.loginBg || '';
+                const fileInput = document.getElementById('set-login-bg');
+                
+                // Jika user memilih file baru untuk Background
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    bgBase64 = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(file);
+                    });
+                }
+
+                const payload = {
+                    appName: document.getElementById('set-app-name').value,
+                    appIcon: document.getElementById('set-app-icon').value,
+                    loginBg: bgBase64
+                };
+                
                 await callBackend('simpanSettingsServer', payload);
                 if(IS_PREVIEW) state.settings = payload;
                 applySettingsUI();
+                
+                // Clear input
+                fileInput.value = '';
                 alert('Pengaturan berhasil disimpan!');
-            } catch(e) { alert('Gagal menyimpan pengaturan'); }
+            } catch(e) { 
+                alert('Gagal menyimpan pengaturan'); 
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
         }
 
         function backupData() {
@@ -977,7 +1072,6 @@
                     if(parsed && parsed.barang && parsed.kas) {
                         state = parsed; // Override lokal state
                         applySettingsUI();
-                        // Idealnya di sini panggil backend untuk save state massal jika live
                         alert("Data berhasil di-restore! Halaman akan dimuat ulang.");
                         navigate('dashboard');
                     } else {
@@ -1055,14 +1149,14 @@
             });
         }
 
-        function openModalBarang() { document.getElementById('form-barang').reset(); document.getElementById('form-mode').value = 'add'; document.getElementById('b-id').value = ''; document.getElementById('modal-barang-title').innerText = 'Tambah Barang Baru'; document.getElementById('modal-barang').classList.remove('hidden'); }
+        function openModalBarang() { document.getElementById('form-barang').reset(); document.getElementById('form-mode').value = 'add'; document.getElementById('b-id').value = ''; document.getElementById('modal-barang-title').innerHTML = '<i class="fas fa-box text-emerald-400 mr-2"></i>Tambah Barang Baru'; document.getElementById('modal-barang').classList.remove('hidden'); }
         function closeModalBarang() { document.getElementById('modal-barang').classList.add('hidden'); }
 
         function editBarang(b) {
             document.getElementById('form-mode').value = 'edit'; document.getElementById('b-id').value = b.id;
             ['kode','nama','kategori','satuan','stok'].forEach(k => document.getElementById(`b-${k}`).value = b[k]);
             document.getElementById('b-hbeli').value = b.harga_beli; document.getElementById('b-hjual').value = b.harga_jual;
-            document.getElementById('modal-barang-title').innerText = 'Edit Data Barang'; document.getElementById('modal-barang').classList.remove('hidden');
+            document.getElementById('modal-barang-title').innerHTML = '<i class="fas fa-edit text-blue-400 mr-2"></i>Edit Data Barang'; document.getElementById('modal-barang').classList.remove('hidden');
         }
 
         async function simpanBarang(e) {
@@ -1321,19 +1415,19 @@
                 const tBiaya = state.biaya.reduce((s, b) => s + b.nominal, 0);
                 const lBersih = lKotor - tBiaya;
                 cont.innerHTML = `
-                    <div class="max-w-2xl mx-auto p-8 bg-white rounded-2xl border border-slate-200 shadow-sm mt-4">
-                        <h3 class="text-2xl font-black text-slate-800 text-center mb-6 border-b pb-4"><i class="fas fa-file-invoice text-emerald-500 mr-2"></i>LAPORAN LABA RUGI <br><span class="text-sm font-bold text-slate-500">Periode: Semua Waktu</span></h3>
+                    <div class="max-w-2xl mx-auto p-4 md:p-8 bg-white rounded-2xl border border-slate-200 shadow-sm mt-4">
+                        <h3 class="text-xl md:text-2xl font-black text-slate-800 text-center mb-6 border-b pb-4"><i class="fas fa-file-invoice text-emerald-500 mr-2"></i>LAPORAN LABA RUGI <br><span class="text-sm font-bold text-slate-500">Periode: Semua Waktu</span></h3>
                         
-                        <div class="flex justify-between text-lg mb-2"><span class="text-slate-600 font-bold">Pendapatan Penjualan</span> <span class="font-black text-slate-800">${formatRp(omzet)}</span></div>
-                        <div class="flex justify-between text-lg mb-4 text-rose-600 pb-4 border-b-2 border-dashed"><span class="ml-4 font-medium">Dikurangi Harga Pokok (HPP)</span> <span class="font-bold">(${formatRp(hpp)})</span></div>
+                        <div class="flex justify-between text-base md:text-lg mb-2"><span class="text-slate-600 font-bold">Pendapatan Penjualan</span> <span class="font-black text-slate-800">${formatRp(omzet)}</span></div>
+                        <div class="flex justify-between text-base md:text-lg mb-4 text-rose-600 pb-4 border-b-2 border-dashed"><span class="ml-4 font-medium">Dikurangi Harga Pokok (HPP)</span> <span class="font-bold">(${formatRp(hpp)})</span></div>
                         
-                        <div class="flex justify-between text-xl font-black mb-6 text-emerald-700 bg-emerald-50 p-4 rounded-xl border border-emerald-100"><span>LABA KOTOR</span> <span>${formatRp(lKotor)}</span></div>
+                        <div class="flex justify-between text-lg md:text-xl font-black mb-6 text-emerald-700 bg-emerald-50 p-4 rounded-xl border border-emerald-100"><span>LABA KOTOR</span> <span>${formatRp(lKotor)}</span></div>
                         
-                        <div class="text-slate-600 font-black mb-2 uppercase tracking-wide text-sm">Biaya Operasional:</div>
-                        <div class="flex justify-between text-lg mb-4 text-rose-600 pb-4 border-b-2 border-dashed"><span class="ml-4 font-medium">Total Biaya Operasional</span> <span class="font-bold">(${formatRp(tBiaya)})</span></div>
+                        <div class="text-slate-600 font-black mb-2 uppercase tracking-wide text-xs md:text-sm">Biaya Operasional:</div>
+                        <div class="flex justify-between text-base md:text-lg mb-4 text-rose-600 pb-4 border-b-2 border-dashed"><span class="ml-4 font-medium">Total Biaya Operasional</span> <span class="font-bold">(${formatRp(tBiaya)})</span></div>
                         
-                        <div class="flex justify-between text-2xl font-black mt-6 p-6 rounded-2xl ${lBersih >= 0 ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/40' : 'bg-gradient-to-r from-rose-600 to-rose-500 text-white shadow-lg shadow-rose-500/40'}">
-                            <span>LABA / (RUGI) BERSIH</span> <span>${formatRp(lBersih)}</span>
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center text-xl md:text-2xl font-black mt-6 p-6 rounded-2xl ${lBersih >= 0 ? 'bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg shadow-emerald-500/40' : 'bg-gradient-to-r from-rose-600 to-rose-500 text-white shadow-lg shadow-rose-500/40'}">
+                            <span class="mb-2 sm:mb-0">LABA / (RUGI) BERSIH</span> <span>${formatRp(lBersih)}</span>
                         </div>
                     </div>`;
             }
@@ -1346,53 +1440,53 @@
 
                 cont.innerHTML = `
                     <div class="max-w-5xl mx-auto mt-4">
-                        <h3 class="text-2xl font-black text-slate-800 text-center mb-8"><i class="fas fa-balance-scale text-blue-500 mr-2"></i>NERACA KEUANGAN (BALANCE SHEET)</h3>
+                        <h3 class="text-xl md:text-2xl font-black text-slate-800 text-center mb-8"><i class="fas fa-balance-scale text-blue-500 mr-2"></i>NERACA KEUANGAN (BALANCE SHEET)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <!-- AKTIVA -->
                             <div class="bg-gradient-to-b from-blue-50 to-white p-6 md:p-8 rounded-2xl border border-blue-200 shadow-sm">
-                                <h4 class="text-xl font-black text-blue-800 mb-6 border-b-2 border-blue-200 pb-3">AKTIVA (ASET)</h4>
-                                <div class="flex justify-between mb-4"><span class="text-slate-600 font-bold">Kas Aktif</span> <span class="font-black text-slate-800 text-lg">${formatRp(state.saldoKas)}</span></div>
-                                <div class="flex justify-between mb-4"><span class="text-slate-600 font-bold">Piutang Pelanggan</span> <span class="font-black text-slate-800 text-lg">${formatRp(piutang)}</span></div>
-                                <div class="flex justify-between mb-6"><span class="text-slate-600 font-bold">Nilai Persediaan Barang</span> <span class="font-black text-slate-800 text-lg">${formatRp(nilaiPersediaan)}</span></div>
-                                <div class="flex justify-between text-xl font-black mt-8 pt-4 border-t-4 border-blue-300 text-blue-900 bg-blue-100 p-3 rounded-lg"><span>TOTAL AKTIVA</span> <span>${formatRp(totalAktiva)}</span></div>
+                                <h4 class="text-lg md:text-xl font-black text-blue-800 mb-6 border-b-2 border-blue-200 pb-3">AKTIVA (ASET)</h4>
+                                <div class="flex justify-between mb-4"><span class="text-slate-600 font-bold">Kas Aktif</span> <span class="font-black text-slate-800 text-base md:text-lg">${formatRp(state.saldoKas)}</span></div>
+                                <div class="flex justify-between mb-4"><span class="text-slate-600 font-bold">Piutang Pelanggan</span> <span class="font-black text-slate-800 text-base md:text-lg">${formatRp(piutang)}</span></div>
+                                <div class="flex justify-between mb-6"><span class="text-slate-600 font-bold">Nilai Persediaan Barang</span> <span class="font-black text-slate-800 text-base md:text-lg">${formatRp(nilaiPersediaan)}</span></div>
+                                <div class="flex justify-between text-lg md:text-xl font-black mt-8 pt-4 border-t-4 border-blue-300 text-blue-900 bg-blue-100 p-3 rounded-lg"><span>TOTAL AKTIVA</span> <span>${formatRp(totalAktiva)}</span></div>
                             </div>
                             <!-- PASIVA -->
                             <div class="bg-gradient-to-b from-rose-50 to-white p-6 md:p-8 rounded-2xl border border-rose-200 shadow-sm">
-                                <h4 class="text-xl font-black text-rose-800 mb-6 border-b-2 border-rose-200 pb-3">PASIVA (KEWAJIBAN & MODAL)</h4>
+                                <h4 class="text-lg md:text-xl font-black text-rose-800 mb-6 border-b-2 border-rose-200 pb-3">PASIVA (KEWAJIBAN & MODAL)</h4>
                                 <div class="text-rose-800 font-black text-sm mb-3 uppercase tracking-wider">Kewajiban:</div>
-                                <div class="flex justify-between mb-6 ml-4"><span class="text-slate-600 font-bold">Hutang Supplier</span> <span class="font-black text-slate-800 text-lg">${formatRp(hutang)}</span></div>
+                                <div class="flex justify-between mb-6 ml-4"><span class="text-slate-600 font-bold">Hutang Supplier</span> <span class="font-black text-slate-800 text-base md:text-lg">${formatRp(hutang)}</span></div>
                                 <div class="text-indigo-800 font-black text-sm mb-3 uppercase tracking-wider">Ekuitas:</div>
-                                <div class="flex justify-between mb-6 ml-4"><span class="text-slate-600 font-bold">Modal / Ekuitas Bersih</span> <span class="font-black text-slate-800 text-lg">${formatRp(modalEkuitas)}</span></div>
-                                <div class="flex justify-between text-xl font-black mt-8 pt-4 border-t-4 border-rose-300 text-rose-900 bg-rose-100 p-3 rounded-lg"><span>TOTAL PASIVA</span> <span>${formatRp(hutang + modalEkuitas)}</span></div>
+                                <div class="flex justify-between mb-6 ml-4"><span class="text-slate-600 font-bold">Modal / Ekuitas Bersih</span> <span class="font-black text-slate-800 text-base md:text-lg">${formatRp(modalEkuitas)}</span></div>
+                                <div class="flex justify-between text-lg md:text-xl font-black mt-8 pt-4 border-t-4 border-rose-300 text-rose-900 bg-rose-100 p-3 rounded-lg"><span>TOTAL PASIVA</span> <span>${formatRp(hutang + modalEkuitas)}</span></div>
                             </div>
                         </div>
                     </div>`;
             }
             else if(tab === 'kas') {
-                let h = `<div class="mb-6 mt-4 p-6 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl shadow-lg flex justify-between items-center text-white"><div class="font-bold uppercase tracking-wider text-emerald-100">Saldo Kas Akhir</div><div class="text-4xl font-black">${formatRp(state.saldoKas)}</div></div>`;
-                h += `<div class="overflow-x-auto rounded-xl border border-slate-200"><table class="w-full text-left border-collapse text-sm bg-white"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">Tanggal</th><th class="p-4 font-semibold">Kategori</th><th class="p-4 font-semibold">Keterangan</th><th class="p-4 text-center font-semibold">In/Out</th><th class="p-4 text-right font-semibold">Nominal</th><th class="p-4 text-right font-semibold">Saldo Akhir</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+                let h = `<div class="mb-6 mt-4 p-6 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center text-white"><div class="font-bold uppercase tracking-wider text-emerald-100 mb-2 md:mb-0">Saldo Kas Akhir</div><div class="text-3xl md:text-4xl font-black">${formatRp(state.saldoKas)}</div></div>`;
+                h += `<div class="overflow-x-auto rounded-xl border border-slate-200"><table class="w-full text-left border-collapse text-sm bg-white min-w-max"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">Tanggal</th><th class="p-4 font-semibold">Kategori</th><th class="p-4 font-semibold">Keterangan</th><th class="p-4 text-center font-semibold">In/Out</th><th class="p-4 text-right font-semibold">Nominal</th><th class="p-4 text-right font-semibold">Saldo Akhir</th></tr></thead><tbody class="divide-y divide-slate-100">`;
                 state.kas.slice().reverse().forEach(k => {
                     const c = k.jenis === 'Masuk' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : 'bg-rose-100 text-rose-700 border border-rose-200';
-                    h += `<tr class="hover:bg-slate-50"><td class="p-4 font-medium text-slate-500">${k.tanggal}</td><td class="p-4 font-bold text-slate-700">${k.kategori}</td><td class="p-4">${k.keterangan}</td><td class="p-4 text-center"><span class="px-3 py-1 rounded-lg text-xs font-black ${c}">${k.jenis}</span></td><td class="p-4 text-right font-black ${k.jenis==='Masuk'?'text-emerald-600':'text-rose-600'}">${formatRp(k.nominal)}</td><td class="p-4 text-right font-black text-slate-800 text-lg">${formatRp(k.saldo)}</td></tr>`;
+                    h += `<tr class="hover:bg-slate-50"><td class="p-4 font-medium text-slate-500">${k.tanggal}</td><td class="p-4 font-bold text-slate-700">${k.kategori}</td><td class="p-4">${k.keterangan}</td><td class="p-4 text-center"><span class="px-3 py-1 rounded-lg text-xs font-black ${c}">${k.jenis}</span></td><td class="p-4 text-right font-black ${k.jenis==='Masuk'?'text-emerald-600':'text-rose-600'}">${formatRp(k.nominal)}</td><td class="p-4 text-right font-black text-slate-800 text-base md:text-lg">${formatRp(k.saldo)}</td></tr>`;
                 });
                 cont.innerHTML = h + `</tbody></table></div>`;
             }
             else if(tab === 'penjualan') {
-                let h = `<div class="overflow-x-auto rounded-xl border border-slate-200 mt-4"><table class="w-full text-left border-collapse text-sm bg-white"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">ID Transaksi</th><th class="p-4 font-semibold">Tanggal</th><th class="p-4 font-semibold">Pelanggan</th><th class="p-4 font-semibold">Metode</th><th class="p-4 text-center font-semibold">Status</th><th class="p-4 text-right font-semibold">Total Transaksi</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+                let h = `<div class="overflow-x-auto rounded-xl border border-slate-200 mt-4"><table class="w-full text-left border-collapse text-sm bg-white min-w-max"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">ID Transaksi</th><th class="p-4 font-semibold">Tanggal</th><th class="p-4 font-semibold">Pelanggan</th><th class="p-4 font-semibold">Metode</th><th class="p-4 text-center font-semibold">Status</th><th class="p-4 text-right font-semibold">Total Transaksi</th></tr></thead><tbody class="divide-y divide-slate-100">`;
                 state.penjualan.slice().reverse().forEach(p => {
                     const st = p.status_bayar === 'Lunas' ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700';
-                    h += `<tr class="hover:bg-slate-50"><td class="p-4 text-emerald-600 font-black font-mono text-xs">${p.id}</td><td class="p-4 font-medium text-slate-500">${p.tanggal}</td><td class="p-4 font-bold text-slate-700">${p.pelanggan}</td><td class="p-4 font-semibold">${p.metode}</td><td class="p-4 text-center"><span class="px-3 py-1 rounded-lg text-xs font-black ${st}">${p.status_bayar}</span></td><td class="p-4 text-right font-black text-slate-800 text-lg">${formatRp(p.total)}</td></tr>`;
+                    h += `<tr class="hover:bg-slate-50"><td class="p-4 text-emerald-600 font-black font-mono text-xs">${p.id}</td><td class="p-4 font-medium text-slate-500">${p.tanggal}</td><td class="p-4 font-bold text-slate-700">${p.pelanggan}</td><td class="p-4 font-semibold">${p.metode}</td><td class="p-4 text-center"><span class="px-3 py-1 rounded-lg text-xs font-black ${st}">${p.status_bayar}</span></td><td class="p-4 text-right font-black text-slate-800 text-base md:text-lg">${formatRp(p.total)}</td></tr>`;
                 });
                 cont.innerHTML = h + `</tbody></table></div>`;
             }
             else if(tab === 'stok') {
-                let h = `<div class="overflow-x-auto rounded-xl border border-slate-200 mt-4"><table class="w-full text-left border-collapse text-sm bg-white"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">Kode</th><th class="p-4 font-semibold">Barang</th><th class="p-4 text-center font-semibold">Sisa Stok</th><th class="p-4 text-right font-semibold">Harga Beli</th><th class="p-4 text-right font-semibold">Nilai Aset (HPP x Stok)</th></tr></thead><tbody class="divide-y divide-slate-100">`;
+                let h = `<div class="overflow-x-auto rounded-xl border border-slate-200 mt-4"><table class="w-full text-left border-collapse text-sm bg-white min-w-max"><thead class="bg-slate-800 text-white"><tr><th class="p-4 font-semibold">Kode</th><th class="p-4 font-semibold">Barang</th><th class="p-4 text-center font-semibold">Sisa Stok</th><th class="p-4 text-right font-semibold">Harga Beli</th><th class="p-4 text-right font-semibold">Nilai Aset (HPP x Stok)</th></tr></thead><tbody class="divide-y divide-slate-100">`;
                 let t = 0;
                 state.barang.forEach(b => {
                     const aset = b.harga_beli * b.stok; t += aset;
                     h += `<tr class="hover:bg-slate-50"><td class="p-4 text-slate-400 font-mono text-xs font-bold">${b.kode}</td><td class="p-4 font-bold text-slate-800">${b.nama}</td><td class="p-4 text-center font-black ${b.stok<=10?'text-rose-600':''}">${b.stok}</td><td class="p-4 text-right text-slate-500">${formatRp(b.harga_beli)}</td><td class="p-4 text-right font-black text-slate-700">${formatRp(aset)}</td></tr>`;
                 });
-                cont.innerHTML = h + `<tr class="bg-slate-900 text-white font-black"><td colspan="4" class="p-5 text-right tracking-wider">TOTAL NILAI PERSEDIAAN BARANG:</td><td class="p-5 text-right text-xl text-emerald-400">${formatRp(t)}</td></tr></tbody></table></div>`;
+                cont.innerHTML = h + `<tr class="bg-slate-900 text-white font-black"><td colspan="4" class="p-5 text-right tracking-wider">TOTAL NILAI PERSEDIAAN BARANG:</td><td class="p-5 text-right text-base md:text-xl text-emerald-400">${formatRp(t)}</td></tr></tbody></table></div>`;
             }
         }
     </script>
