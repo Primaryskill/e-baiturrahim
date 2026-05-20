@@ -48,8 +48,9 @@
             <div id="login-bg-image" class="absolute inset-0 bg-cover bg-center opacity-50 hidden transition-all duration-500"></div>
             
             <div class="relative z-10 bg-white p-8 rounded-2xl shadow-2xl w-96 max-w-full border-t-4 border-emerald-600 m-4">
-                <div class="text-center mb-6">
-                    <i class="fas fa-store text-5xl text-emerald-600 mb-3 app-icon-display"></i>
+                <div class="text-center mb-6 flex flex-col items-center">
+                    <img id="app-logo-login" src="" class="hidden w-20 h-20 object-contain mb-3" alt="Logo">
+                    <i class="fas fa-store text-5xl text-emerald-600 mb-3 app-icon-display" id="app-icon-login"></i>
                     <h1 class="text-2xl font-black text-slate-800 app-name-display">E-Baiturrahim</h1>
                     <p class="text-sm text-slate-500 font-medium">Sistem Manajemen & Akuntansi</p>
                 </div>
@@ -71,7 +72,6 @@
                     <button type="submit" id="btn-login" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl">
                         Login Sekarang
                     </button>
-
                 </form>
             </div>
         </div>
@@ -86,7 +86,8 @@
             <aside id="app-sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col transition-transform duration-300 z-50 shadow-2xl fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 h-full">
                 <div class="h-16 flex items-center justify-between md:justify-center border-b border-slate-800 bg-slate-950 px-4 md:px-2">
                     <div class="flex items-center">
-                        <i class="fas fa-store text-xl text-emerald-500 mr-2 app-icon-display"></i>
+                        <img id="app-logo-sidebar" src="" class="hidden w-8 h-8 object-contain mr-2" alt="Logo">
+                        <i class="fas fa-store text-xl text-emerald-500 mr-2 app-icon-display" id="app-icon-sidebar"></i>
                         <h2 class="text-lg font-black text-white app-name-display truncate px-2">E-Baiturrahim</h2>
                     </div>
                     <button onclick="toggleSidebar()" class="md:hidden text-slate-400 hover:text-white"><i class="fas fa-times text-xl"></i></button>
@@ -98,7 +99,7 @@
                         <li><a href="#" onclick="navigate('penjualan')" id="nav-penjualan" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-cash-register w-7 text-green-400"></i> Penjualan (POS)</a></li>
                         <li class="nav-item-admin"><a href="#" onclick="navigate('pembelian')" id="nav-pembelian" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-truck-loading w-7 text-yellow-400"></i> Pembelian Barang</a></li>
                         <li><a href="#" onclick="navigate('return')" id="nav-return" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-exchange-alt w-7 text-orange-400"></i> Barang Return</a></li>
-                        <li class="nav-item-admin"><a href="#" onclick="navigate('biaya')" id="nav-biaya" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-file-invoice-dollar w-7 text-red-400"></i> Biaya Operasional</a></li>
+                        <li class="nav-item-admin"><a href="#" onclick="navigate('biaya')" id="nav-biaya" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-file-invoice-dollar w-7 text-red-400"></i> Biaya</a></li>
                         <li class="nav-item-admin"><a href="#" onclick="navigate('hutang')" id="nav-hutang" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-hand-holding-usd w-7 text-rose-400"></i> Hutang (Supplier)</a></li>
                         <li class="nav-item-admin"><a href="#" onclick="navigate('piutang')" id="nav-piutang" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-money-check-alt w-7 text-indigo-400"></i> Piutang (Pelanggan)</a></li>
                         <li class="nav-item-admin"><a href="#" onclick="navigate('laporan')" id="nav-laporan" class="nav-link block px-4 py-3 rounded-xl hover:bg-slate-800 hover:text-white flex items-center transition"><i class="fas fa-chart-pie w-7 text-purple-400"></i> Laporan Lengkap</a></li>
@@ -196,9 +197,13 @@
                                         <input type="text" id="set-app-name" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 bg-slate-50 font-bold" required>
                                     </div>
                                     <div class="mb-4">
+                                        <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Custom Logo Aplikasi (Gambar)</label>
+                                        <input type="file" id="set-app-logo" accept="image/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-100 file:text-blue-700 hover:file:bg-blue-200 cursor-pointer">
+                                        <p class="text-xs text-slate-400 mt-2">Biarkan kosong jika ingin menggunakan ikon FontAwesome.</p>
+                                    </div>
+                                    <div class="mb-4">
                                         <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Ikon Aplikasi (Class FontAwesome)</label>
-                                        <input type="text" id="set-app-icon" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 font-mono text-sm" placeholder="Contoh: fa-store, fa-shopping-cart" required>
-                                        <p class="text-xs text-slate-400 mt-2">Referensi: <a href="https://fontawesome.com/search?o=r&m=free" target="_blank" class="text-emerald-600 underline">FontAwesome Free</a></p>
+                                        <input type="text" id="set-app-icon" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-emerald-500 font-mono text-sm" placeholder="Contoh: fa-store, fa-shopping-cart">
                                     </div>
                                     <div class="mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200">
                                         <label class="block text-xs font-bold text-slate-600 uppercase mb-2">Background Layar Login (Opsional)</label>
@@ -262,7 +267,6 @@
 
                     <!-- VIEW: PENJUALAN (POS) -->
                     <div id="view-penjualan" class="view-section hidden">
-                        <!-- Tampilan diubah jadi Flex Col untuk Mobile, dan Grid Grid-cols-3 untuk Desktop -->
                         <div class="flex flex-col lg:grid lg:grid-cols-3 gap-6 h-auto lg:h-[calc(100vh-11rem)] mb-24 lg:mb-6">
                             <!-- Produk / Pencarian -->
                             <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm p-4 flex flex-col border border-slate-100 h-[55vh] lg:h-auto">
@@ -285,11 +289,15 @@
                                     <!-- Rendered via JS -->
                                 </div>
                                 <div class="p-4 md:p-5 bg-white border-t border-slate-200 shadow-[0_-10px_15px_-3px_rgba(0,0,0,0.05)] z-10 shrink-0">
-                                    <div class="flex justify-between mb-2 text-slate-500 text-sm font-bold">
+                                    <div class="flex justify-between items-center mb-2 text-slate-500 text-sm font-bold">
                                         <span>Subtotal</span>
                                         <span id="pos-subtotal" class="text-slate-700">Rp 0</span>
                                     </div>
-                                    <div class="flex justify-between mb-4 md:mb-5 text-xl md:text-2xl font-black text-emerald-700 border-b-2 border-emerald-100 pb-3">
+                                    <div class="flex justify-between items-center mb-2 text-slate-500 text-sm font-bold">
+                                        <span>Diskon (%)</span>
+                                        <input type="number" id="pos-diskon" value="0" min="0" max="100" class="w-20 p-1 border border-slate-300 rounded text-right focus:ring-emerald-500" onchange="renderPosCart()" onkeyup="renderPosCart()">
+                                    </div>
+                                    <div class="flex justify-between mb-4 md:mb-5 text-xl md:text-2xl font-black text-emerald-700 border-b-2 border-emerald-100 pb-3 mt-2">
                                         <span>Total</span>
                                         <span id="pos-total">Rp 0</span>
                                     </div>
@@ -412,6 +420,7 @@
                                             <th class="p-4 font-semibold">Barang</th>
                                             <th class="p-4 text-center font-semibold">Qty</th>
                                             <th class="p-4 font-semibold">Keterangan / Alasan</th>
+                                            <th class="p-4 text-center font-semibold">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-return" class="text-sm divide-y divide-slate-100 bg-white">
@@ -422,12 +431,12 @@
                         </div>
                     </div>
 
-                    <!-- VIEW: BIAYA OPERASIONAL -->
+                    <!-- VIEW: BIAYA -->
                     <div id="view-biaya" class="view-section hidden">
                         <div class="bg-white rounded-2xl shadow-sm p-4 md:p-6 border border-slate-100 mb-24 md:mb-32">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                                 <div>
-                                    <h3 class="text-xl font-black text-slate-800"><i class="fas fa-file-invoice-dollar text-red-500 mr-2"></i>Biaya Operasional</h3>
+                                    <h3 class="text-xl font-black text-slate-800"><i class="fas fa-file-invoice-dollar text-red-500 mr-2"></i>Biaya</h3>
                                     <p class="text-sm text-slate-500 font-medium mt-1">Pencatatan pengeluaran toko. Otomatis memotong Saldo Kas.</p>
                                 </div>
                                 <button onclick="openModalBiaya()" class="w-full md:w-auto bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-xl shadow-lg font-bold transition"><i class="fas fa-plus mr-2"></i>Catat Biaya Baru</button>
@@ -441,6 +450,7 @@
                                             <th class="p-4 font-semibold">Kategori Biaya</th>
                                             <th class="p-4 font-semibold">Keterangan Tambahan</th>
                                             <th class="p-4 text-right font-semibold">Nominal (Rp)</th>
+                                            <th class="p-4 text-center font-semibold">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tbody-biaya" class="text-sm divide-y divide-slate-100 bg-white">
@@ -606,15 +616,17 @@
         <div id="modal-return" class="hidden fixed inset-0 bg-slate-900 bg-opacity-60 z-50 flex items-center justify-center backdrop-blur-sm p-4">
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
                 <div class="bg-slate-800 p-5 text-white flex justify-between items-center">
-                    <h3 class="font-black text-lg tracking-wide"><i class="fas fa-exchange-alt text-orange-400 mr-2"></i>Catat Return</h3>
+                    <h3 class="font-black text-lg tracking-wide" id="modal-return-title"><i class="fas fa-exchange-alt text-orange-400 mr-2"></i>Catat Return</h3>
                     <button onclick="closeModalReturn()" class="text-slate-400 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
                 </div>
                 <form onsubmit="simpanReturn(event)" class="p-6">
+                    <input type="hidden" id="ret-id">
+                    <input type="hidden" id="ret-mode" value="add">
                     <div class="mb-4">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Jenis Return</label>
                         <select id="ret-jenis" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-orange-500 font-bold text-slate-700" required>
-                            <option value="Dari Pelanggan">🔄 Dari Pelanggan (Stok +)</option>
-                            <option value="Ke Supplier">🔙 Ke Supplier (Stok -)</option>
+                            <option value="Dari Pelanggan">📥 Dari Pelanggan (Stok +)</option>
+                            <option value="Ke Supplier">📤 Ke Supplier (Stok -)</option>
                         </select>
                     </div>
                     <div class="mb-4">
@@ -643,10 +655,12 @@
         <div id="modal-biaya" class="hidden fixed inset-0 bg-slate-900 bg-opacity-60 z-50 flex items-center justify-center backdrop-blur-sm p-4">
             <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
                 <div class="bg-slate-800 p-5 text-white flex justify-between items-center">
-                    <h3 class="font-black text-lg tracking-wide"><i class="fas fa-file-invoice-dollar text-red-400 mr-2"></i>Catat Biaya</h3>
+                    <h3 class="font-black text-lg tracking-wide" id="modal-biaya-title"><i class="fas fa-file-invoice-dollar text-red-400 mr-2"></i>Catat Biaya</h3>
                     <button onclick="closeModalBiaya()" class="text-slate-400 hover:text-white transition"><i class="fas fa-times text-xl"></i></button>
                 </div>
                 <form onsubmit="simpanBiaya(event)" class="p-6">
+                    <input type="hidden" id="bia-id">
+                    <input type="hidden" id="bia-mode" value="add">
                     <div class="mb-4">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Kategori Biaya</label>
                         <input type="text" id="bia-kategori" class="w-full p-3 border border-slate-300 rounded-xl focus:ring-red-500 font-bold text-slate-700" list="biaya-list" placeholder="Pilih atau ketik baru" required>
@@ -661,11 +675,11 @@
                     <div class="mb-6">
                         <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Nominal (Rp)</label>
                         <input type="number" id="bia-nominal" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:ring-red-500 focus:border-red-500 text-xl font-black text-red-600" min="100" required>
-                        <p class="text-xs font-bold text-red-500 mt-2 bg-red-50 p-2 rounded border border-red-100">*Akan memotong Saldo Kas secara otomatis</p>
+                        <p class="text-xs font-bold text-red-500 mt-2 bg-red-50 p-2 rounded border border-red-100">*Akan memengaruhi Saldo Kas secara otomatis</p>
                     </div>
                     <div class="flex justify-end space-x-3 pt-4 border-t border-slate-100">
                         <button type="button" onclick="closeModalBiaya()" class="px-6 py-3 border border-slate-300 rounded-xl text-slate-600 font-bold hover:bg-slate-50">Batal</button>
-                        <button type="submit" id="btn-save-biaya" class="px-6 py-3 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 shadow-lg">Catat Biaya</button>
+                        <button type="submit" id="btn-save-biaya" class="px-6 py-3 bg-red-600 text-white font-black rounded-xl hover:bg-red-700 shadow-lg">Simpan Biaya</button>
                     </div>
                 </form>
             </div>
@@ -746,10 +760,10 @@
         const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         /** =========================================================================
-         * DATA DUMMY & STATE GLOBAL (untuk fallback/referensi sementara)
+         * DATA DUMMY & STATE GLOBAL
          * ========================================================================= */
         let state = {
-            settings: { appName: "E-Baiturrahim", appIcon: "fa-store", loginBg: "" },
+            settings: { appName: "E-Baiturrahim", appIcon: "fa-store", appLogo: "", loginBg: "" },
             user: null,
             barang: [], kas: [], penjualan: [], pembelian: [],
             retur: [], biaya: [], hutang: [], piutang: [],
@@ -766,10 +780,33 @@
         function applySettingsUI() {
             const n = state.settings?.appName || 'E-Baiturrahim';
             const i = state.settings?.appIcon || 'fa-store';
+            const logo = state.settings?.appLogo || '';
             const bg = state.settings?.loginBg;
+            
             document.querySelectorAll('.app-name-display').forEach(el => el.innerText = n);
-            document.querySelectorAll('.app-icon-display').forEach(el => el.className = `fas ${i} mr-2 app-icon-display text-emerald-500`);
             document.title = n;
+            
+            // Custom Logo Handling
+            const hasLogo = logo && logo.trim() !== "";
+            const icons = document.querySelectorAll('.app-icon-display');
+            const logoLogin = document.getElementById('app-logo-login');
+            const logoSidebar = document.getElementById('app-logo-sidebar');
+
+            if (hasLogo) {
+                icons.forEach(el => el.classList.add('hidden'));
+                if (logoLogin) { logoLogin.src = logo; logoLogin.classList.remove('hidden'); }
+                if (logoSidebar) { logoSidebar.src = logo; logoSidebar.classList.remove('hidden'); }
+            } else {
+                icons.forEach(el => {
+                    el.className = `fas ${i} app-icon-display text-emerald-500`;
+                    if (el.id === 'app-icon-login') el.classList.add('text-5xl', 'mb-3');
+                    if (el.id === 'app-icon-sidebar') el.classList.add('text-xl', 'mr-2');
+                });
+                if (logoLogin) logoLogin.classList.add('hidden');
+                if (logoSidebar) logoSidebar.classList.add('hidden');
+            }
+
+            // Background Handling
             const bgEl = document.getElementById('login-bg-image');
             if (bgEl) {
                 if (bg && bg.trim() !== "") { bgEl.style.backgroundImage = `url(${bg})`; bgEl.classList.remove('hidden'); }
@@ -779,7 +816,6 @@
 
         /** =========================================================================
          * CORE LOGIC - SUPABASE BACKEND
-         * Semua operasi data langsung ke Supabase
          * ========================================================================= */
         function showLoading(show) { document.getElementById('loading-indicator').style.display = show ? 'block' : 'none'; }
 
@@ -825,42 +861,33 @@
                     sb.from('settings').select('*').limit(1).single()
                 ]);
 
-                // Normalisasi nama kolom settings dari snake_case ke camelCase
                 const settingsNorm = settings ? {
                     appName: settings.app_name,
                     appIcon: settings.app_icon,
+                    appLogo: settings.app_logo,
                     loginBg: settings.login_bg
                 } : state.settings;
 
-                // Normalisasi barang (snake_case -> camelCase untuk harga_beli/harga_jual)
                 const barangNorm = (barang || []).map(b => ({
-                    ...b,
-                    harga_beli: parseFloat(b.harga_beli),
-                    harga_jual: parseFloat(b.harga_jual),
-                    stok: parseInt(b.stok)
+                    ...b, harga_beli: parseFloat(b.harga_beli), harga_jual: parseFloat(b.harga_jual), stok: parseInt(b.stok)
                 }));
 
-                // Hitung saldo kas dari record kas
                 let saldoKas = 0;
-                if (kas && kas.length > 0) {
-                    saldoKas = parseFloat(kas[kas.length - 1].saldo);
-                } else if (settings) {
-                    saldoKas = parseFloat(settings.saldo_kas || 0);
-                }
+                if (kas && kas.length > 0) saldoKas = parseFloat(kas[kas.length - 1].saldo);
+                else if (settings) saldoKas = parseFloat(settings.saldo_kas || 0);
 
                 return {
                     success: true,
                     data: {
                         barang: barangNorm || [],
                         kas: (kas || []).map(k => ({ ...k, nominal: parseFloat(k.nominal), saldo: parseFloat(k.saldo) })),
-                        penjualan: (penjualan || []).map(p => ({ ...p, total: parseFloat(p.total), laba: parseFloat(p.laba || 0), items: p.items || [] })),
+                        penjualan: (penjualan || []).map(p => ({ ...p, total: parseFloat(p.total), laba: parseFloat(p.laba || 0), diskon: parseFloat(p.diskon || 0), items: p.items || [] })),
                         pembelian: (pembelian || []).map(p => ({ ...p, total: parseFloat(p.total) })),
                         retur: retur || [],
                         biaya: (biaya || []).map(b => ({ ...b, nominal: parseFloat(b.nominal) })),
                         hutang: (hutang || []).map(h => ({ ...h, nominal_awal: parseFloat(h.nominal_awal), sisa_hutang: parseFloat(h.sisa_hutang) })),
                         piutang: (piutang || []).map(p => ({ ...p, nominal_awal: parseFloat(p.nominal_awal), sisa_piutang: parseFloat(p.sisa_piutang) })),
-                        saldoKas,
-                        settings: settingsNorm
+                        saldoKas, settings: settingsNorm
                     }
                 };
             }
@@ -868,9 +895,8 @@
             // ============= SETTINGS =============
             if (action === 'simpanSettingsServer') {
                 const { error } = await sb.from('settings').update({
-                    app_name: payload.appName,
-                    app_icon: payload.appIcon,
-                    login_bg: payload.loginBg,
+                    app_name: payload.appName, app_icon: payload.appIcon,
+                    app_logo: payload.appLogo, login_bg: payload.loginBg,
                     updated_at: new Date().toISOString()
                 }).eq('id', 1);
                 if (error) throw error;
@@ -881,18 +907,15 @@
             // ============= BARANG =============
             if (action === 'simpanBarangServer') {
                 if (payload.id) {
-                    // Update
                     const { error } = await sb.from('barang').update({
                         kode: payload.kode, nama: payload.nama, kategori: payload.kategori,
                         satuan: payload.satuan, harga_beli: payload.harga_beli,
-                        harga_jual: payload.harga_jual, stok: payload.stok,
-                        updated_at: new Date().toISOString()
+                        harga_jual: payload.harga_jual, stok: payload.stok, updated_at: new Date().toISOString()
                     }).eq('id', payload.id);
                     if (error) throw error;
                     const idx = state.barang.findIndex(b => b.id === payload.id);
                     if (idx >= 0) state.barang[idx] = payload;
                 } else {
-                    // Insert baru
                     payload.id = Date.now().toString();
                     const { error } = await sb.from('barang').insert({
                         id: payload.id, kode: payload.kode, nama: payload.nama,
@@ -905,18 +928,15 @@
                 return { success: true };
             }
 
-            // ============= KAS AWAL / MODAL =============
+            // ============= KAS AWAL =============
             if (action === 'simpanKasAwalServer') {
                 state.saldoKas += payload.nominal;
                 const kasEntry = {
-                    id: 'K' + Date.now(), tanggal: today,
-                    jenis: 'Masuk', kategori: 'Modal Awal',
+                    id: 'K' + Date.now(), tanggal: today, jenis: 'Masuk', kategori: 'Modal Awal',
                     keterangan: payload.ket, nominal: payload.nominal, saldo: state.saldoKas
                 };
-                // Update saldo di settings
                 await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
-                const { error } = await sb.from('kas').insert(kasEntry);
-                if (error) throw error;
+                await sb.from('kas').insert(kasEntry);
                 state.kas.push(kasEntry);
                 return { success: true };
             }
@@ -927,7 +947,6 @@
                 let t_hpp = 0;
                 const savedItems = JSON.parse(JSON.stringify(payload.items));
 
-                // Update stok barang satu per satu
                 for (const item of savedItems) {
                     const b = state.barang.find(x => x.kode === item.kode);
                     if (b) {
@@ -940,12 +959,11 @@
                 const laba = payload.total - t_hpp;
                 const pjEntry = {
                     id: id_pj, tanggal: today, pelanggan: payload.pelanggan || 'Umum',
-                    total: payload.total, metode: payload.metode,
+                    total: payload.total, diskon: payload.diskon || 0, metode: payload.metode,
                     status_bayar: payload.metode === 'Piutang' ? 'Belum Lunas' : 'Lunas',
                     laba, items: savedItems
                 };
-                const { error: errPj } = await sb.from('penjualan').insert(pjEntry);
-                if (errPj) throw errPj;
+                await sb.from('penjualan').insert(pjEntry);
                 state.penjualan.push(pjEntry);
 
                 if (payload.metode !== 'Piutang') {
@@ -993,27 +1011,15 @@
                             await sb.from('piutang').update({ nominal_awal: pt.nominal_awal, sisa_piutang: pt.sisa_piutang, pelanggan: pt.pelanggan }).eq('id', pt.id);
                         }
                     }
-                    // Recalculate saldo kas
-                    let currentSaldo = 0;
-                    state.kas.sort((a,b) => new Date(a.created_at||a.tanggal) - new Date(b.created_at||b.tanggal));
-                    for (const k of state.kas) {
-                        if (k.jenis === 'Masuk') currentSaldo += k.nominal;
-                        else currentSaldo -= k.nominal;
-                        k.saldo = currentSaldo;
-                        await sb.from('kas').update({ saldo: k.saldo }).eq('id', k.id);
-                    }
-                    state.saldoKas = currentSaldo;
-                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                    await recalculateKas();
                 }
                 return { success: true };
             }
 
-            // ============= HAPUS PENJUALAN =============
             if (action === 'hapusPenjualanServer') {
                 const pjIndex = state.penjualan.findIndex(p => p.id === payload.id);
                 if (pjIndex > -1) {
                     const pj = state.penjualan[pjIndex];
-                    // Kembalikan stok
                     if (pj.items) {
                         for (const item of pj.items) {
                             const b = state.barang.find(x => x.kode === item.kode);
@@ -1023,11 +1029,9 @@
                             }
                         }
                     }
-                    // Hapus penjualan
                     await sb.from('penjualan').delete().eq('id', payload.id);
                     state.penjualan.splice(pjIndex, 1);
 
-                    // Hapus kas atau piutang terkait
                     if (pj.metode !== 'Piutang') {
                         const kasIndex = state.kas.findIndex(k => k.keterangan && k.keterangan.includes(pj.id));
                         if (kasIndex > -1) {
@@ -1041,24 +1045,15 @@
                             state.piutang.splice(ptIndex, 1);
                         }
                     }
-                    // Recalculate saldo kas
-                    let currentSaldo = 0;
-                    for (const k of state.kas) {
-                        if (k.jenis === 'Masuk') currentSaldo += k.nominal;
-                        else currentSaldo -= k.nominal;
-                        k.saldo = currentSaldo;
-                        await sb.from('kas').update({ saldo: k.saldo }).eq('id', k.id);
-                    }
-                    state.saldoKas = currentSaldo;
-                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                    await recalculateKas();
                 }
                 return { success: true };
             }
 
             // ============= PEMBELIAN =============
             if (action === 'simpanPembelianServer') {
+                // (Logika asli pembelian tetap utuh)
                 const id_pb = 'PB' + Date.now().toString().slice(-6);
-                // Update stok barang
                 for (const item of payload.items) {
                     const b = state.barang.find(x => x.kode === item.kode);
                     if (b) {
@@ -1067,29 +1062,18 @@
                         await sb.from('barang').update({ stok: b.stok, harga_beli: b.harga_beli, updated_at: new Date().toISOString() }).eq('kode', item.kode);
                     }
                 }
-                const pbEntry = {
-                    id: id_pb, tanggal: today, supplier: payload.supplier,
-                    total: payload.total, status_bayar: payload.metode === 'Hutang' ? 'Hutang' : 'Lunas',
-                    items: payload.items
-                };
+                const pbEntry = { id: id_pb, tanggal: today, supplier: payload.supplier, total: payload.total, status_bayar: payload.metode === 'Hutang' ? 'Hutang' : 'Lunas', items: payload.items };
                 await sb.from('pembelian').insert(pbEntry);
                 state.pembelian.push(pbEntry);
 
                 if (payload.metode !== 'Hutang') {
                     state.saldoKas -= payload.total;
-                    const kasEntry = {
-                        id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar',
-                        kategori: 'Pembelian', keterangan: 'Ke ' + payload.supplier,
-                        nominal: payload.total, saldo: state.saldoKas
-                    };
+                    const kasEntry = { id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar', kategori: 'Pembelian', keterangan: 'Ke ' + payload.supplier, nominal: payload.total, saldo: state.saldoKas };
                     await sb.from('kas').insert(kasEntry);
                     await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
                     state.kas.push(kasEntry);
                 } else {
-                    const htEntry = {
-                        id: 'HT' + Date.now(), id_ref: id_pb, supplier: payload.supplier,
-                        nominal_awal: payload.total, sisa_hutang: payload.total, status: 'Belum Lunas'
-                    };
+                    const htEntry = { id: 'HT' + Date.now(), id_ref: id_pb, supplier: payload.supplier, nominal_awal: payload.total, sisa_hutang: payload.total, status: 'Belum Lunas' };
                     await sb.from('hutang').insert(htEntry);
                     state.hutang.push(htEntry);
                 }
@@ -1098,38 +1082,96 @@
 
             // ============= RETURN =============
             if (action === 'simpanReturnServer') {
-                const rtEntry = {
-                    id: 'RT' + Date.now(), tanggal: today, jenis: payload.jenis,
-                    kode_barang: payload.kode_barang, qty: payload.qty, keterangan: payload.ket
-                };
-                await sb.from('retur').insert(rtEntry);
-                state.retur.push(rtEntry);
+                let rtEntry = {};
                 const b = state.barang.find(x => x.kode === payload.kode_barang);
-                if (b) {
-                    if (payload.jenis === 'Dari Pelanggan') b.stok += parseInt(payload.qty);
-                    else b.stok -= parseInt(payload.qty);
-                    await sb.from('barang').update({ stok: b.stok, updated_at: new Date().toISOString() }).eq('kode', payload.kode_barang);
+                
+                if (payload.id) { // EDIT
+                    const oldR = state.retur.find(r => r.id === payload.id);
+                    if (oldR && b) {
+                        // Revert old stock
+                        if (oldR.jenis === 'Dari Pelanggan') b.stok -= parseInt(oldR.qty);
+                        else b.stok += parseInt(oldR.qty);
+                        // Apply new stock
+                        if (payload.jenis === 'Dari Pelanggan') b.stok += parseInt(payload.qty);
+                        else b.stok -= parseInt(payload.qty);
+                        await sb.from('barang').update({ stok: b.stok, updated_at: new Date().toISOString() }).eq('kode', payload.kode_barang);
+                        
+                        await sb.from('retur').update({ jenis: payload.jenis, kode_barang: payload.kode_barang, qty: payload.qty, keterangan: payload.ket }).eq('id', payload.id);
+                        oldR.jenis = payload.jenis; oldR.kode_barang = payload.kode_barang; oldR.qty = payload.qty; oldR.keterangan = payload.ket;
+                    }
+                } else { // ADD
+                    rtEntry = { id: 'RT' + Date.now(), tanggal: today, jenis: payload.jenis, kode_barang: payload.kode_barang, qty: payload.qty, keterangan: payload.ket };
+                    await sb.from('retur').insert(rtEntry);
+                    state.retur.push(rtEntry);
+                    if (b) {
+                        if (payload.jenis === 'Dari Pelanggan') b.stok += parseInt(payload.qty);
+                        else b.stok -= parseInt(payload.qty);
+                        await sb.from('barang').update({ stok: b.stok, updated_at: new Date().toISOString() }).eq('kode', payload.kode_barang);
+                    }
                 }
                 return { success: true };
             }
 
-            // ============= BIAYA OPERASIONAL =============
+            if (action === 'hapusReturnServer') {
+                const idx = state.retur.findIndex(r => r.id === payload.id);
+                if (idx > -1) {
+                    const r = state.retur[idx];
+                    const b = state.barang.find(x => x.kode === r.kode_barang);
+                    if (b) {
+                        if (r.jenis === 'Dari Pelanggan') b.stok -= parseInt(r.qty);
+                        else b.stok += parseInt(r.qty);
+                        await sb.from('barang').update({ stok: b.stok, updated_at: new Date().toISOString() }).eq('kode', r.kode_barang);
+                    }
+                    await sb.from('retur').delete().eq('id', payload.id);
+                    state.retur.splice(idx, 1);
+                }
+                return { success: true };
+            }
+
+            // ============= BIAYA =============
             if (action === 'simpanBiayaServer') {
-                state.saldoKas -= payload.nominal;
-                const byEntry = {
-                    id: 'BY' + Date.now(), tanggal: today,
-                    kategori: payload.kategori, keterangan: payload.ket, nominal: payload.nominal
-                };
-                await sb.from('biaya').insert(byEntry);
-                state.biaya.push(byEntry);
-                const kasEntry = {
-                    id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar',
-                    kategori: 'Biaya', keterangan: payload.ket,
-                    nominal: payload.nominal, saldo: state.saldoKas
-                };
-                await sb.from('kas').insert(kasEntry);
-                await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
-                state.kas.push(kasEntry);
+                if(payload.id) { // EDIT
+                    const oldB = state.biaya.find(b => b.id === payload.id);
+                    if(oldB) {
+                        const diff = payload.nominal - oldB.nominal;
+                        await sb.from('biaya').update({ kategori: payload.kategori, keterangan: payload.ket, nominal: payload.nominal }).eq('id', payload.id);
+                        oldB.kategori = payload.kategori; oldB.keterangan = payload.ket; oldB.nominal = payload.nominal;
+                        
+                        const kasItem = state.kas.find(k => k.keterangan === oldB.keterangan && k.kategori === 'Biaya'); // simple match
+                        if(kasItem) {
+                            kasItem.nominal = payload.nominal; kasItem.keterangan = payload.ket;
+                            await sb.from('kas').update({ nominal: payload.nominal, keterangan: payload.ket }).eq('id', kasItem.id);
+                        }
+                        await recalculateKas();
+                    }
+                } else { // ADD
+                    state.saldoKas -= payload.nominal;
+                    const byEntry = { id: 'BY' + Date.now(), tanggal: today, kategori: payload.kategori, keterangan: payload.ket, nominal: payload.nominal };
+                    await sb.from('biaya').insert(byEntry);
+                    state.biaya.push(byEntry);
+                    const kasEntry = { id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar', kategori: 'Biaya', keterangan: payload.ket, nominal: payload.nominal, saldo: state.saldoKas };
+                    await sb.from('kas').insert(kasEntry);
+                    await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+                    state.kas.push(kasEntry);
+                }
+                return { success: true };
+            }
+
+            if (action === 'hapusBiayaServer') {
+                const idx = state.biaya.findIndex(b => b.id === payload.id);
+                if (idx > -1) {
+                    const b = state.biaya[idx];
+                    await sb.from('biaya').delete().eq('id', payload.id);
+                    state.biaya.splice(idx, 1);
+                    
+                    // Simple matching for kas removal
+                    const kasIdx = state.kas.findIndex(k => k.keterangan === b.keterangan && k.kategori === 'Biaya');
+                    if (kasIdx > -1) {
+                        await sb.from('kas').delete().eq('id', state.kas[kasIdx].id);
+                        state.kas.splice(kasIdx, 1);
+                    }
+                    await recalculateKas();
+                }
                 return { success: true };
             }
 
@@ -1141,11 +1183,7 @@
                     if (h.sisa_hutang <= 0) { h.sisa_hutang = 0; h.status = 'Lunas'; }
                     await sb.from('hutang').update({ sisa_hutang: h.sisa_hutang, status: h.status, updated_at: new Date().toISOString() }).eq('id', payload.id);
                     state.saldoKas -= payload.nominal;
-                    const kasEntry = {
-                        id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar',
-                        kategori: 'Hutang', keterangan: 'Bayar Hutang ' + h.id_ref,
-                        nominal: payload.nominal, saldo: state.saldoKas
-                    };
+                    const kasEntry = { id: 'K' + Date.now(), tanggal: today, jenis: 'Keluar', kategori: 'Hutang', keterangan: 'Bayar Hutang ' + h.id_ref, nominal: payload.nominal, saldo: state.saldoKas };
                     await sb.from('kas').insert(kasEntry);
                     await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
                     state.kas.push(kasEntry);
@@ -1155,11 +1193,7 @@
                     if (p.sisa_piutang <= 0) { p.sisa_piutang = 0; p.status = 'Lunas'; }
                     await sb.from('piutang').update({ sisa_piutang: p.sisa_piutang, status: p.status, updated_at: new Date().toISOString() }).eq('id', payload.id);
                     state.saldoKas += payload.nominal;
-                    const kasEntry = {
-                        id: 'K' + Date.now(), tanggal: today, jenis: 'Masuk',
-                        kategori: 'Piutang', keterangan: 'Terima Piutang ' + p.id_ref,
-                        nominal: payload.nominal, saldo: state.saldoKas
-                    };
+                    const kasEntry = { id: 'K' + Date.now(), tanggal: today, jenis: 'Masuk', kategori: 'Piutang', keterangan: 'Terima Piutang ' + p.id_ref, nominal: payload.nominal, saldo: state.saldoKas };
                     await sb.from('kas').insert(kasEntry);
                     await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
                     state.kas.push(kasEntry);
@@ -1170,12 +1204,22 @@
             return { success: false, message: 'Action tidak dikenal: ' + action };
         }
 
+        async function recalculateKas() {
+            let currentSaldo = 0;
+            state.kas.sort((a,b) => new Date(a.created_at||a.tanggal) - new Date(b.created_at||b.tanggal));
+            for (const k of state.kas) {
+                if (k.jenis === 'Masuk') currentSaldo += k.nominal;
+                else currentSaldo -= k.nominal;
+                k.saldo = currentSaldo;
+                await sb.from('kas').update({ saldo: k.saldo }).eq('id', k.id);
+            }
+            state.saldoKas = currentSaldo;
+            await sb.from('settings').update({ saldo_kas: state.saldoKas }).eq('id', 1);
+        }
 
         /** =========================================================================
          * AUTH, NAVIGATION & RESPONSIVE LAYOUT
          * ========================================================================= */
-        // Load settings dari Supabase saat halaman pertama dibuka
-        // agar background login & nama app muncul tanpa perlu login dulu
         async function initApp() {
             try {
                 const { data: settings } = await sb.from('settings').select('*').limit(1).single();
@@ -1183,18 +1227,15 @@
                     state.settings = {
                         appName: settings.app_name || 'E-Baiturrahim',
                         appIcon: settings.app_icon || 'fa-store',
+                        appLogo: settings.app_logo || '',
                         loginBg: settings.login_bg || ''
                     };
                 }
-            } catch(e) {
-                // Jika gagal (koneksi/konfigurasi belum diisi), pakai default
-                console.warn('Tidak bisa load settings awal:', e.message);
-            }
+            } catch(e) { console.warn('Tidak bisa load settings awal:', e.message); }
             applySettingsUI();
         }
         initApp();
 
-        // Fitur Responsif Hamburger Menu
         function toggleSidebar() {
             const sidebar = document.getElementById('app-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
@@ -1207,26 +1248,19 @@
             }
         }
 
-        // Fungsionalitas Lihat Password
         function togglePasswordVisibility() {
             const pwdInput = document.getElementById('password');
             const pwdIcon = document.getElementById('toggle-pwd-icon');
             if (pwdInput.type === 'password') {
-                pwdInput.type = 'text';
-                pwdIcon.classList.remove('fa-eye');
-                pwdIcon.classList.add('fa-eye-slash');
+                pwdInput.type = 'text'; pwdIcon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
-                pwdInput.type = 'password';
-                pwdIcon.classList.remove('fa-eye-slash');
-                pwdIcon.classList.add('fa-eye');
+                pwdInput.type = 'password'; pwdIcon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
 
         async function handleLogin(e) {
             e.preventDefault();
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const btn = document.getElementById('btn-login');
+            const user = document.getElementById('username').value, pass = document.getElementById('password').value, btn = document.getElementById('btn-login');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...'; btn.disabled = true;
 
@@ -1238,19 +1272,14 @@
                     document.getElementById('user-role-display').innerText = state.user.role;
                     document.getElementById('user-avatar').innerText = state.user.nama.charAt(0).toUpperCase();
                     
-                    if(state.user.role === 'Kasir') {
-                        document.querySelectorAll('.nav-item-admin').forEach(el => el.classList.add('hidden'));
-                    } else {
-                        document.querySelectorAll('.nav-item-admin').forEach(el => el.classList.remove('hidden'));
-                    }
+                    if(state.user.role === 'Kasir') document.querySelectorAll('.nav-item-admin').forEach(el => el.classList.add('hidden'));
+                    else document.querySelectorAll('.nav-item-admin').forEach(el => el.classList.remove('hidden'));
                     
                     document.getElementById('login-view').classList.add('hidden');
                     const mainLayout = document.getElementById('main-layout');
-                    mainLayout.classList.remove('hidden');
-                    mainLayout.style.display = 'flex';
+                    mainLayout.classList.remove('hidden'); mainLayout.style.display = 'flex';
                     
-                    await loadDataAwal();
-                    applySettingsUI(); // re-apply in case backend overwrote it
+                    await loadDataAwal(); applySettingsUI();
                     navigate(state.user.role === 'Admin' ? 'dashboard' : 'penjualan');
                 } else {
                     const errEl = document.getElementById('login-error');
@@ -1263,20 +1292,14 @@
         function handleLogout() {
             state.user = null;
             const mainLayout = document.getElementById('main-layout');
-            mainLayout.classList.add('hidden');
-            mainLayout.style.display = 'none';
+            mainLayout.classList.add('hidden'); mainLayout.style.display = 'none';
             document.getElementById('login-view').classList.remove('hidden');
             document.getElementById('login-form').reset();
             
-            // Reset Eye icon just in case
-            const pwdInput = document.getElementById('password');
-            pwdInput.type = 'password';
-            document.getElementById('toggle-pwd-icon').classList.remove('fa-eye-slash');
-            document.getElementById('toggle-pwd-icon').classList.add('fa-eye');
-            
+            document.getElementById('password').type = 'password';
+            document.getElementById('toggle-pwd-icon').classList.replace('fa-eye-slash', 'fa-eye');
             document.getElementById('login-error').classList.add('hidden');
             
-            // Memastikan sidebar tertutup saat di mobile setelah logout
             const sidebar = document.getElementById('app-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             if (sidebar) sidebar.classList.add('-translate-x-full');
@@ -1285,19 +1308,18 @@
 
         async function loadDataAwal() {
             const res = await callBackend('getDataAwal', null);
-            if (res.success) { state.barang = res.data.barang || []; state.kas = res.data.kas || []; state.penjualan = res.data.penjualan || []; state.pembelian = res.data.pembelian || []; state.biaya = res.data.biaya || []; state.hutang = res.data.hutang || []; state.piutang = res.data.piutang || []; state.retur = res.data.retur || []; state.saldoKas = res.data.saldoKas ?? 0; state.settings = res.data.settings || state.settings; }
+            if (res.success) { state = { ...state, ...res.data }; }
         }
 
         function navigate(menu) {
             const titles = { 
                 dashboard: 'Dashboard Utama', barang: 'Master Data Barang', penjualan: 'Point of Sale (POS)', 
-                pembelian: 'Penerimaan Barang (Restock)', return: 'Pencatatan Return', biaya: 'Biaya Operasional',
+                pembelian: 'Penerimaan Barang (Restock)', return: 'Pencatatan Return', biaya: 'Biaya',
                 hutang: 'Manajemen Hutang', piutang: 'Manajemen Piutang', laporan: 'Pusat Laporan & Akuntansi', pengaturan: 'Pengaturan Aplikasi'
             };
             document.getElementById('page-title').innerText = titles[menu];
-            
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-link').forEach(el => { el.classList.remove('bg-slate-800', 'text-white'); });
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('bg-slate-800', 'text-white'));
             
             document.getElementById(`view-${menu}`).classList.remove('hidden');
             const navEl = document.getElementById(`nav-${menu}`);
@@ -1315,16 +1337,12 @@
             if(menu === 'pengaturan') { 
                 document.getElementById('set-app-name').value = state.settings?.appName || 'E-Baiturrahim';
                 document.getElementById('set-app-icon').value = state.settings?.appIcon || 'fa-store';
-                // Reset file input agar rapi tiap kali membuka pengaturan
-                document.getElementById('set-login-bg').value = ''; 
+                document.getElementById('set-login-bg').value = ''; document.getElementById('set-app-logo').value = ''; 
             }
 
-            // Auto-close sidebar on mobile saat pindah menu
             if (window.innerWidth < 768) {
                 const sidebar = document.getElementById('app-sidebar');
-                if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
-                    toggleSidebar();
-                }
+                if (sidebar && !sidebar.classList.contains('-translate-x-full')) toggleSidebar();
             }
         }
 
@@ -1335,57 +1353,45 @@
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...'; 
-            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...'; btn.disabled = true;
 
             try {
                 let bgBase64 = state.settings?.loginBg || '';
-                const fileInput = document.getElementById('set-login-bg');
+                let logoBase64 = state.settings?.appLogo || '';
                 
-                // Jika user memilih file baru untuk Background
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    bgBase64 = await new Promise((resolve) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => resolve(reader.result);
-                        reader.readAsDataURL(file);
-                    });
+                const fileBg = document.getElementById('set-login-bg');
+                if (fileBg.files.length > 0) {
+                    bgBase64 = await new Promise(resolve => { const r = new FileReader(); r.onloadend = () => resolve(r.result); r.readAsDataURL(fileBg.files[0]); });
+                }
+
+                const fileLogo = document.getElementById('set-app-logo');
+                if (fileLogo.files.length > 0) {
+                    logoBase64 = await new Promise(resolve => { const r = new FileReader(); r.onloadend = () => resolve(r.result); r.readAsDataURL(fileLogo.files[0]); });
                 }
 
                 const payload = {
                     appName: document.getElementById('set-app-name').value,
                     appIcon: document.getElementById('set-app-icon').value,
-                    loginBg: bgBase64
+                    appLogo: logoBase64, loginBg: bgBase64
                 };
                 
                 await callBackend('simpanSettingsServer', payload);
-                // settings sudah disimpan di supabaseBackend
                 applySettingsUI();
-                
-                // Clear input
-                fileInput.value = '';
+                fileBg.value = ''; fileLogo.value = '';
                 alert('Pengaturan berhasil disimpan!');
-            } catch(e) { 
-                alert('Gagal menyimpan pengaturan'); 
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
+            } catch(e) { alert('Gagal menyimpan pengaturan'); } 
+            finally { btn.innerHTML = originalText; btn.disabled = false; }
         }
 
         function backupData() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
+            const downloadAnchorNode = document.createElement('a'); downloadAnchorNode.setAttribute("href", dataStr);
             downloadAnchorNode.setAttribute("download", "backup_data_" + getTodayDate() + ".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
+            document.body.appendChild(downloadAnchorNode); downloadAnchorNode.click(); downloadAnchorNode.remove();
         }
 
         function restoreData() {
-            const fileInput = document.getElementById('restore-file');
-            const file = fileInput.files[0];
+            const file = document.getElementById('restore-file').files[0];
             if(!file) return alert("Pilih file backup (.json) terlebih dahulu!");
             
             const reader = new FileReader();
@@ -1393,16 +1399,10 @@
                 try {
                     const parsed = JSON.parse(e.target.result);
                     if(parsed && parsed.barang && parsed.kas) {
-                        state = parsed; // Override lokal state
-                        applySettingsUI();
-                        alert("Data berhasil di-restore! Halaman akan dimuat ulang.");
-                        navigate('dashboard');
-                    } else {
-                        alert("Format file tidak valid.");
-                    }
-                } catch(err) {
-                    alert("Error saat membaca file JSON.");
-                }
+                        state = parsed; applySettingsUI();
+                        alert("Data berhasil di-restore! Halaman akan dimuat ulang."); navigate('dashboard');
+                    } else alert("Format file tidak valid.");
+                } catch(err) { alert("Error saat membaca file JSON."); }
             };
             reader.readAsText(file);
         }
@@ -1411,8 +1411,6 @@
          * MODUL: DASHBOARD & BARANG & KAS AWAL
          * ========================================================================= */
         function renderDashboard() {
-            const today = getTodayDate();
-            let omzet = state.penjualan.filter(p => p.tanggal === today).reduce((sum, p) => sum + p.total, 0);
             let tPiutang = state.piutang.reduce((sum, p) => sum + p.sisa_piutang, 0);
             let tHutang = state.hutang.reduce((sum, h) => sum + h.sisa_hutang, 0);
             let stokTipis = state.barang.filter(b => b.stok <= 10);
@@ -1430,7 +1428,6 @@
                              </div>`;
             });
             document.getElementById('low-stock-list').innerHTML = htmlStok || '<div class="text-center text-slate-400 mt-10"><i class="fas fa-check-circle text-4xl mb-2 text-emerald-300"></i><p>Stok aman</p></div>';
-
         }
 
         // --- KAS AWAL ---
@@ -1438,11 +1435,9 @@
         function closeModalKasAwal() { document.getElementById('modal-kas-awal').classList.add('hidden'); }
         async function simpanKasAwal(e) {
             e.preventDefault();
-            const nom = parseFloat(document.getElementById('ka-nominal').value);
-            const ket = document.getElementById('ka-ket').value;
             const btn = document.getElementById('btn-save-kasawal'); btn.disabled = true;
             try {
-                await callBackend('simpanKasAwalServer', { nominal: nom, ket: ket });
+                await callBackend('simpanKasAwalServer', { nominal: parseFloat(document.getElementById('ka-nominal').value), ket: document.getElementById('ka-ket').value });
                 closeModalKasAwal(); document.getElementById('ka-nominal').value=''; document.getElementById('ka-ket').value='';
                 renderDashboard(); alert('Kas/Modal berhasil ditambahkan!');
             } catch(e) { alert('Gagal'); } finally { btn.disabled = false; }
@@ -1452,7 +1447,6 @@
         function renderTableBarang() {
             const search = document.getElementById('search-barang').value.toLowerCase();
             const tbody = document.getElementById('tbody-barang'); tbody.innerHTML = '';
-            
             const filtered = state.barang.filter(b => b.nama.toLowerCase().includes(search) || b.kode.toLowerCase().includes(search));
             
             filtered.forEach(b => {
@@ -1467,21 +1461,17 @@
                         <td class="p-4 text-center space-x-3">
                             <button onclick='editBarang(${JSON.stringify(b)})' class="text-blue-500 hover:text-blue-700 transition bg-blue-50 px-3 py-1 rounded" title="Edit"><i class="fas fa-edit"></i> Edit</button>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             });
         }
-
         function openModalBarang() { document.getElementById('form-barang').reset(); document.getElementById('form-mode').value = 'add'; document.getElementById('b-id').value = ''; document.getElementById('modal-barang-title').innerHTML = '<i class="fas fa-box text-emerald-400 mr-2"></i>Tambah Barang Baru'; document.getElementById('modal-barang').classList.remove('hidden'); }
         function closeModalBarang() { document.getElementById('modal-barang').classList.add('hidden'); }
-
         function editBarang(b) {
             document.getElementById('form-mode').value = 'edit'; document.getElementById('b-id').value = b.id;
             ['kode','nama','kategori','satuan','stok'].forEach(k => document.getElementById(`b-${k}`).value = b[k]);
             document.getElementById('b-hbeli').value = b.harga_beli; document.getElementById('b-hjual').value = b.harga_jual;
             document.getElementById('modal-barang-title').innerHTML = '<i class="fas fa-edit text-blue-400 mr-2"></i>Edit Data Barang'; document.getElementById('modal-barang').classList.remove('hidden');
         }
-
         async function simpanBarang(e) {
             e.preventDefault(); const btn = document.getElementById('btn-save-barang'); btn.disabled = true;
             const payload = {
@@ -1514,7 +1504,6 @@
                     </div>`;
             });
         }
-
         function addPosCart(kode) {
             const b = state.barang.find(x => x.kode === kode); if(!b) return;
             const ex = state.posCart.find(i => i.kode === kode);
@@ -1522,7 +1511,6 @@
             else { state.posCart.push({ ...b, qty: 1 }); }
             renderPosCart();
         }
-
         function updatePosQty(kode, d) {
             const i = state.posCart.find(x => x.kode === kode); if(!i) return;
             const b = state.barang.find(x => x.kode === kode);
@@ -1531,19 +1519,18 @@
             if(i.qty <= 0) state.posCart = state.posCart.filter(x => x.kode !== kode);
             renderPosCart();
         }
-
-        function clearCart() { state.posCart = []; renderPosCart(); }
+        function clearCart() { state.posCart = []; document.getElementById('pos-diskon').value = 0; renderPosCart(); }
 
         function renderPosCart() {
-            const cont = document.getElementById('pos-cart-items'); cont.innerHTML = ''; let t = 0;
+            const cont = document.getElementById('pos-cart-items'); cont.innerHTML = ''; let sub = 0;
             if(state.posCart.length === 0) cont.innerHTML = '<div class="text-center text-slate-300 mt-10"><i class="fas fa-shopping-basket text-5xl mb-3"></i><p>Keranjang Kosong</p></div>';
             state.posCart.forEach(i => {
-                const sub = i.qty * i.harga_jual; t += sub;
+                const h = i.qty * i.harga_jual; sub += h;
                 cont.innerHTML += `
                     <div class="flex justify-between items-center mb-3 pb-3 border-b border-slate-100">
                         <div class="flex-1 pr-2">
                             <h4 class="text-sm font-bold text-slate-800 line-clamp-2">${i.nama}</h4>
-                            <div class="text-emerald-600 text-sm font-bold mt-1">${formatRp(i.harga_jual)} <span class="text-xs text-slate-400 font-normal ml-1">/ ${i.satuan}</span></div>
+                            <div class="text-emerald-600 text-sm font-bold mt-1">${formatRp(i.harga_jual)}</div>
                         </div>
                         <div class="flex flex-col items-end">
                             <div class="flex items-center space-x-1 bg-slate-100 rounded-lg p-1 mb-1 border border-slate-200">
@@ -1551,11 +1538,19 @@
                                 <span class="w-8 text-center font-bold text-sm">${i.qty}</span>
                                 <button onclick="updatePosQty('${i.kode}', 1)" class="w-7 h-7 bg-white rounded text-slate-600 hover:text-emerald-500 font-bold shadow-sm">+</button>
                             </div>
-                            <span class="text-xs font-bold text-slate-700">${formatRp(sub)}</span>
+                            <span class="text-xs font-bold text-slate-700">${formatRp(h)}</span>
                         </div>
                     </div>`;
             });
-            document.getElementById('pos-subtotal').innerText = formatRp(t); document.getElementById('pos-total').innerText = formatRp(t);
+            let dPct = parseFloat(document.getElementById('pos-diskon').value) || 0;
+            if (dPct > 100) { dPct = 100; document.getElementById('pos-diskon').value = 100; }
+            if (dPct < 0) { dPct = 0; document.getElementById('pos-diskon').value = 0; }
+            
+            const diskonNominal = sub * (dPct / 100);
+            const total = sub - diskonNominal;
+
+            document.getElementById('pos-subtotal').innerText = formatRp(sub); 
+            document.getElementById('pos-total').innerText = formatRp(total);
             document.getElementById('btn-checkout').disabled = state.posCart.length === 0;
         }
 
@@ -1567,25 +1562,27 @@
 
         async function prosesCheckout() {
             if(state.posCart.length === 0) return;
-            const m = document.getElementById('pos-payment-method').value;
-            const p = document.getElementById('pos-customer-name').value;
+            const m = document.getElementById('pos-payment-method').value, p = document.getElementById('pos-customer-name').value;
             if(m === 'Piutang' && !p) return alert('Nama pelanggan harus diisi untuk kasbon!');
             
             const btn = document.getElementById('btn-checkout'); btn.disabled = true;
-            const t = state.posCart.reduce((sum, i) => sum + (i.qty * i.harga_jual), 0);
+            
+            let sub = state.posCart.reduce((sum, i) => sum + (i.qty * i.harga_jual), 0);
+            let dPct = parseFloat(document.getElementById('pos-diskon').value) || 0;
+            let diskon = sub * (dPct / 100);
+            let total = sub - diskon;
             
             try {
-                const res = await callBackend('simpanPenjualanServer', { items: state.posCart, total: t, metode: m, pelanggan: p });
+                const res = await callBackend('simpanPenjualanServer', { items: state.posCart, total: total, diskon: diskon, metode: m, pelanggan: p });
                 if(res.success) {
-                    cetakNotaPDF(res.id_transaksi, state.posCart, t, m, p);
-                    clearCart(); renderPosProducts(); 
-                    document.getElementById('pos-customer-name').value = '';
+                    cetakNotaPDF(res.id_transaksi, state.posCart, sub, diskon, total, m, p);
+                    clearCart(); renderPosProducts(); document.getElementById('pos-customer-name').value = '';
                     alert('Transaksi Berhasil Disimpan!');
                 }
             } catch(e) { alert('Gagal'); } finally { btn.disabled = false; }
         }
 
-        function cetakNotaPDF(id, items, total, metode, pelanggan) {
+        function cetakNotaPDF(id, items, sub, diskon, total, metode, pelanggan) {
             const { jsPDF } = window.jspdf; const doc = new jsPDF({ format: 'a5' });
             const n = state.settings?.appName || 'E-Baiturrahim';
             doc.setFontSize(16); doc.text(n, 10, 15);
@@ -1599,19 +1596,23 @@
                 doc.text(`${(i.qty * i.harga_jual).toLocaleString('id-ID')}`, 130, y, { align: 'right' }); y += 6;
             });
             doc.line(10, y, 138, y); y += 6;
+            
+            if (diskon > 0) {
+                doc.setFontSize(10); doc.text("SUBTOTAL:", 10, y); doc.text(`Rp ${sub.toLocaleString('id-ID')}`, 130, y, { align: 'right' }); y += 5;
+                doc.text("DISKON:", 10, y); doc.text(`- Rp ${diskon.toLocaleString('id-ID')}`, 130, y, { align: 'right' }); y += 6;
+            }
             doc.setFontSize(12); doc.text("TOTAL:", 10, y); doc.text(`Rp ${total.toLocaleString('id-ID')}`, 130, y, { align: 'right' });
             doc.save(`Nota_${id}.pdf`);
         }
 
         /** =========================================================================
-         * MODUL: PEMBELIAN & BIAYA & RETURN & HUTANG/PIUTANG
+         * MODUL: PEMBELIAN
          * ========================================================================= */
         function populateBeliSelect() {
             const sel = document.getElementById('beli-pilih-barang'); sel.innerHTML = '<option value="">-- Pilih Barang --</option>';
             state.barang.forEach(b => sel.innerHTML += `<option value="${b.kode}" data-hb="${b.harga_beli}">${b.kode} - ${b.nama}</option>`);
             sel.onchange = function() { if(this.value) document.getElementById('beli-harga').value = this.options[this.selectedIndex].dataset.hb; };
         }
-
         function addBeliItem() {
             const k = document.getElementById('beli-pilih-barang').value, q = parseInt(document.getElementById('beli-qty').value), h = parseFloat(document.getElementById('beli-harga').value);
             if(!k || isNaN(q) || isNaN(h) || q<=0) return alert('Isi data qty & harga');
@@ -1620,7 +1621,6 @@
             if(ex) { ex.qty += q; ex.harga_beli = h; } else state.beliCart.push({ kode: k, nama: b.nama, qty: q, harga_beli: h });
             document.getElementById('beli-qty').value = ''; renderBeliCart();
         }
-
         function renderBeliCart() {
             const tb = document.getElementById('beli-cart-items'); tb.innerHTML = ''; let t = 0;
             state.beliCart.forEach(i => {
@@ -1629,7 +1629,6 @@
             });
             document.getElementById('beli-total-display').innerText = formatRp(t);
         }
-
         async function prosesPembelian() {
             const s = document.getElementById('beli-supplier').value, m = document.getElementById('beli-metode').value;
             if(!s) return alert('Nama Supplier wajib diisi!'); if(state.beliCart.length===0) return alert('Keranjang kosong!');
@@ -1641,47 +1640,122 @@
             } catch(e) { alert('Gagal'); }
         }
 
-        // --- BIAYA ---
+        /** =========================================================================
+         * MODUL: BIAYA (REVISI: Ditambahkan Edit & Hapus)
+         * ========================================================================= */
         function renderTableBiaya() {
             const tb = document.getElementById('tbody-biaya'); tb.innerHTML = '';
             state.biaya.slice().reverse().forEach(b => {
-                tb.innerHTML += `<tr class="hover:bg-slate-50"><td class="p-4 text-slate-500">${b.tanggal}</td><td class="p-4 text-slate-400 font-mono text-xs">${b.id}</td><td class="p-4 font-bold text-slate-700">${b.kategori}</td><td class="p-4">${b.keterangan}</td><td class="p-4 text-right font-black text-rose-600">${formatRp(b.nominal)}</td></tr>`;
+                tb.innerHTML += `<tr class="hover:bg-slate-50">
+                    <td class="p-4 text-slate-500">${b.tanggal}</td>
+                    <td class="p-4 text-slate-400 font-mono text-xs">${b.id}</td>
+                    <td class="p-4 font-bold text-slate-700">${b.kategori}</td>
+                    <td class="p-4">${b.keterangan}</td>
+                    <td class="p-4 text-right font-black text-rose-600">${formatRp(b.nominal)}</td>
+                    <td class="p-4 text-center space-x-2 whitespace-nowrap">
+                        <button onclick='editBiaya(${JSON.stringify(b)})' class="text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded text-xs"><i class="fas fa-edit"></i> Edit</button>
+                        <button onclick="hapusBiaya('${b.id}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 px-2 py-1 rounded text-xs"><i class="fas fa-trash-alt"></i> Hapus</button>
+                    </td>
+                </tr>`;
             });
         }
-        function openModalBiaya() { document.getElementById('modal-biaya').classList.remove('hidden'); }
+        function openModalBiaya() { document.getElementById('bia-id').value = ''; document.getElementById('bia-mode').value = 'add'; document.getElementById('bia-kategori').value = ''; document.getElementById('bia-ket').value = ''; document.getElementById('bia-nominal').value = ''; document.getElementById('modal-biaya-title').innerHTML = '<i class="fas fa-file-invoice-dollar text-red-400 mr-2"></i>Catat Biaya'; document.getElementById('modal-biaya').classList.remove('hidden'); }
         function closeModalBiaya() { document.getElementById('modal-biaya').classList.add('hidden'); }
+        
+        function editBiaya(b) {
+            document.getElementById('bia-id').value = b.id; document.getElementById('bia-mode').value = 'edit';
+            document.getElementById('bia-kategori').value = b.kategori; document.getElementById('bia-ket').value = b.keterangan; document.getElementById('bia-nominal').value = b.nominal;
+            document.getElementById('modal-biaya-title').innerHTML = '<i class="fas fa-edit text-blue-400 mr-2"></i>Edit Biaya';
+            document.getElementById('modal-biaya').classList.remove('hidden');
+        }
+
         async function simpanBiaya(e) {
             e.preventDefault();
             try {
-                await callBackend('simpanBiayaServer', { kategori: document.getElementById('bia-kategori').value, ket: document.getElementById('bia-ket').value, nominal: parseFloat(document.getElementById('bia-nominal').value) });
-                closeModalBiaya(); renderTableBiaya(); alert('Biaya dicatat, Saldo Kas berkurang.');
-            } catch(e) { alert('Gagal'); }
+                await callBackend('simpanBiayaServer', { 
+                    id: document.getElementById('bia-id').value,
+                    kategori: document.getElementById('bia-kategori').value, 
+                    ket: document.getElementById('bia-ket').value, 
+                    nominal: parseFloat(document.getElementById('bia-nominal').value) 
+                });
+                closeModalBiaya(); renderTableBiaya(); alert('Berhasil! Saldo kas disesuaikan.');
+            } catch(e) { alert('Gagal menyimpan biaya'); }
         }
 
-        // --- RETURN ---
+        async function hapusBiaya(id) {
+            if(!confirm("Yakin ingin menghapus biaya ini? Saldo kas akan dikembalikan.")) return;
+            try {
+                await callBackend('hapusBiayaServer', { id: id });
+                renderTableBiaya(); alert("Berhasil dihapus!");
+            } catch (e) { alert("Gagal menghapus biaya."); }
+        }
+
+        /** =========================================================================
+         * MODUL: RETURN (REVISI: Ditambahkan Edit & Hapus)
+         * ========================================================================= */
         function renderTableReturn() {
             const tb = document.getElementById('tbody-return'); tb.innerHTML = '';
             state.retur.slice().reverse().forEach(r => {
                 const b = state.barang.find(x => x.kode === r.kode_barang);
                 const jStyle = r.jenis === 'Dari Pelanggan' ? 'text-emerald-600 bg-emerald-50 border-emerald-200' : 'text-orange-600 bg-orange-50 border-orange-200';
-                tb.innerHTML += `<tr class="hover:bg-slate-50"><td class="p-4 text-slate-500">${r.tanggal}</td><td class="p-4 text-slate-400 font-mono text-xs">${r.id}</td><td class="p-4"><span class="px-3 py-1 text-xs font-bold border rounded-lg ${jStyle}">${r.jenis}</span></td><td class="p-4 font-bold text-slate-700">${b?b.nama:r.kode_barang}</td><td class="p-4 text-center font-black">${r.qty}</td><td class="p-4">${r.keterangan}</td></tr>`;
+                tb.innerHTML += `<tr class="hover:bg-slate-50">
+                    <td class="p-4 text-slate-500">${r.tanggal}</td>
+                    <td class="p-4 text-slate-400 font-mono text-xs">${r.id}</td>
+                    <td class="p-4"><span class="px-3 py-1 text-xs font-bold border rounded-lg ${jStyle}">${r.jenis}</span></td>
+                    <td class="p-4 font-bold text-slate-700">${b?b.nama:r.kode_barang}</td>
+                    <td class="p-4 text-center font-black">${r.qty}</td>
+                    <td class="p-4">${r.keterangan}</td>
+                    <td class="p-4 text-center space-x-2 whitespace-nowrap">
+                        <button onclick='editReturn(${JSON.stringify(r)})' class="text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-1 rounded text-xs"><i class="fas fa-edit"></i> Edit</button>
+                        <button onclick="hapusReturn('${r.id}')" class="text-rose-600 hover:text-rose-800 bg-rose-50 px-2 py-1 rounded text-xs"><i class="fas fa-trash-alt"></i> Hapus</button>
+                    </td>
+                </tr>`;
             });
         }
         function openModalReturn() { 
             const s = document.getElementById('ret-barang'); s.innerHTML = '<option value="">Pilih Barang...</option>';
             state.barang.forEach(b => s.innerHTML += `<option value="${b.kode}">${b.kode} - ${b.nama}</option>`);
+            document.getElementById('ret-id').value = ''; document.getElementById('ret-mode').value = 'add';
+            document.getElementById('ret-jenis').value = 'Dari Pelanggan'; document.getElementById('ret-qty').value = ''; document.getElementById('ret-ket').value = '';
+            document.getElementById('modal-return-title').innerHTML = '<i class="fas fa-exchange-alt text-orange-400 mr-2"></i>Catat Return';
             document.getElementById('modal-return').classList.remove('hidden'); 
         }
         function closeModalReturn() { document.getElementById('modal-return').classList.add('hidden'); }
+        
+        function editReturn(r) {
+            const s = document.getElementById('ret-barang'); s.innerHTML = '<option value="">Pilih Barang...</option>';
+            state.barang.forEach(b => s.innerHTML += `<option value="${b.kode}" ${b.kode === r.kode_barang ? 'selected' : ''}>${b.kode} - ${b.nama}</option>`);
+            document.getElementById('ret-id').value = r.id; document.getElementById('ret-mode').value = 'edit';
+            document.getElementById('ret-jenis').value = r.jenis; document.getElementById('ret-qty').value = r.qty; document.getElementById('ret-ket').value = r.keterangan;
+            document.getElementById('modal-return-title').innerHTML = '<i class="fas fa-edit text-blue-400 mr-2"></i>Edit Return';
+            document.getElementById('modal-return').classList.remove('hidden');
+        }
+
         async function simpanReturn(e) {
             e.preventDefault();
             try {
-                await callBackend('simpanReturnServer', { jenis: document.getElementById('ret-jenis').value, kode_barang: document.getElementById('ret-barang').value, qty: document.getElementById('ret-qty').value, ket: document.getElementById('ret-ket').value });
-                closeModalReturn(); renderTableReturn(); alert('Return dicatat, Stok diupdate.');
-            } catch(e) { alert('Gagal'); }
+                await callBackend('simpanReturnServer', { 
+                    id: document.getElementById('ret-id').value,
+                    jenis: document.getElementById('ret-jenis').value, 
+                    kode_barang: document.getElementById('ret-barang').value, 
+                    qty: parseInt(document.getElementById('ret-qty').value), 
+                    ket: document.getElementById('ret-ket').value 
+                });
+                closeModalReturn(); renderTableReturn(); alert('Berhasil! Stok barang diperbarui otomatis.');
+            } catch(e) { alert('Gagal menyimpan return'); }
         }
 
-        // --- HUTANG / PIUTANG ---
+        async function hapusReturn(id) {
+            if(!confirm("Yakin ingin menghapus riwayat return ini? Stok barang akan dikembalikan seperti semula.")) return;
+            try {
+                await callBackend('hapusReturnServer', { id: id });
+                renderTableReturn(); alert("Berhasil dihapus!");
+            } catch (e) { alert("Gagal menghapus return."); }
+        }
+
+        /** =========================================================================
+         * MODUL: HUTANG & PIUTANG
+         * ========================================================================= */
         function renderTableHutang() {
             const tb = document.getElementById('tbody-hutang'); tb.innerHTML = '';
             state.hutang.filter(h => h.status !== 'Lunas').forEach(h => {
@@ -1704,7 +1778,7 @@
             document.getElementById('hp-ref-val').innerText = nama;
             document.getElementById('hp-sisa').value = formatRp(sisa);
             document.getElementById('hp-nominal').max = sisa;
-            document.getElementById('hp-nominal').value = sisa; // Default lunas semua
+            document.getElementById('hp-nominal').value = sisa;
             document.getElementById('modal-bayar-title').innerHTML = type === 'hutang' ? '<i class="fas fa-hand-holding-usd text-rose-400 mr-2"></i>Bayar Hutang' : '<i class="fas fa-money-check-alt text-indigo-400 mr-2"></i>Terima Piutang';
             document.getElementById('modal-bayar').classList.remove('hidden');
         }
@@ -1734,47 +1808,35 @@
             }
         }
         function closeModalEditPenjualan() { document.getElementById('modal-edit-penjualan').classList.add('hidden'); }
-
         async function simpanEditPenjualan(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-save-ep'); btn.disabled = true;
+            e.preventDefault(); const btn = document.getElementById('btn-save-ep'); btn.disabled = true;
             try {
-                await callBackend('editPenjualanServer', {
-                    id: document.getElementById('ep-id').value,
-                    tanggal: document.getElementById('ep-tanggal').value,
-                    pelanggan: document.getElementById('ep-pelanggan').value,
-                    total: parseFloat(document.getElementById('ep-total').value)
-                });
-                closeModalEditPenjualan();
-                switchTabLaporan('penjualan');
-                alert('Data penjualan berhasil diubah!');
-            } catch(err) { alert('Gagal mengubah data'); }
-            finally { btn.disabled = false; }
+                await callBackend('editPenjualanServer', { id: document.getElementById('ep-id').value, tanggal: document.getElementById('ep-tanggal').value, pelanggan: document.getElementById('ep-pelanggan').value, total: parseFloat(document.getElementById('ep-total').value) });
+                closeModalEditPenjualan(); switchTabLaporan('penjualan'); alert('Data penjualan berhasil diubah!');
+            } catch(err) { alert('Gagal mengubah data'); } finally { btn.disabled = false; }
         }
-
         async function hapusPenjualan(id) {
             if(!confirm('Anda yakin ingin membatalkan/menghapus transaksi penjualan ini?\n\nCatatan stok barang, kas, dan atau piutang terkait akan dikembalikan secara otomatis.')) return;
             try {
                 await callBackend('hapusPenjualanServer', { id: id });
-                switchTabLaporan('penjualan');
-                alert('Transaksi berhasil dihapus dan catatan telah dikembalikan.');
+                switchTabLaporan('penjualan'); alert('Transaksi berhasil dihapus dan catatan telah dikembalikan.');
             } catch(err) { alert('Gagal menghapus data'); }
         }
 
         /** =========================================================================
-         * MODUL: LAPORAN AKUNTANSI LENGKAP
+         * MODUL: LAPORAN
          * ========================================================================= */
         function switchTabLaporan(tab) {
             ['labarugi', 'neraca', 'kas', 'penjualan', 'stok'].forEach(t => {
                 document.getElementById(`tab-${t}`).className = "px-6 py-4 border-b-4 border-transparent text-slate-500 hover:text-emerald-600 whitespace-nowrap font-bold transition";
             });
             document.getElementById(`tab-${tab}`).className = "px-6 py-4 border-b-4 border-emerald-600 text-emerald-700 font-black whitespace-nowrap transition";
-            
             const cont = document.getElementById('laporan-content');
             
             if(tab === 'labarugi') {
                 const omzet = state.penjualan.reduce((s, p) => s + p.total, 0);
-                const hpp = omzet - state.penjualan.reduce((s, p) => s + (p.laba || 0), 0);
+                const totalDiskon = state.penjualan.reduce((s, p) => s + (p.diskon || 0), 0);
+                const hpp = (omzet + totalDiskon) - state.penjualan.reduce((s, p) => s + (p.laba || 0), 0);
                 const lKotor = omzet - hpp;
                 const tBiaya = state.biaya.reduce((s, b) => s + b.nominal, 0);
                 const lBersih = lKotor - tBiaya;
@@ -1782,7 +1844,7 @@
                     <div class="max-w-2xl mx-auto p-4 md:p-8 bg-white rounded-2xl border border-slate-200 shadow-sm mt-4">
                         <h3 class="text-xl md:text-2xl font-black text-slate-800 text-center mb-6 border-b pb-4"><i class="fas fa-file-invoice text-emerald-500 mr-2"></i>LAPORAN LABA RUGI <br><span class="text-sm font-bold text-slate-500">Periode: Semua Waktu</span></h3>
                         
-                        <div class="flex justify-between text-base md:text-lg mb-2"><span class="text-slate-600 font-bold">Pendapatan Penjualan</span> <span class="font-black text-slate-800">${formatRp(omzet)}</span></div>
+                        <div class="flex justify-between text-base md:text-lg mb-2"><span class="text-slate-600 font-bold">Pendapatan Penjualan Bersih</span> <span class="font-black text-slate-800">${formatRp(omzet)}</span></div>
                         <div class="flex justify-between text-base md:text-lg mb-4 text-rose-600 pb-4 border-b-2 border-dashed"><span class="ml-4 font-medium">Dikurangi Harga Pokok (HPP)</span> <span class="font-bold">(${formatRp(hpp)})</span></div>
                         
                         <div class="flex justify-between text-lg md:text-xl font-black mb-6 text-emerald-700 bg-emerald-50 p-4 rounded-xl border border-emerald-100"><span>LABA KOTOR</span> <span>${formatRp(lKotor)}</span></div>
@@ -1800,13 +1862,12 @@
                 const piutang = state.piutang.reduce((s, p) => s + p.sisa_piutang, 0);
                 const hutang = state.hutang.reduce((s, h) => s + h.sisa_hutang, 0);
                 const totalAktiva = state.saldoKas + piutang + nilaiPersediaan;
-                const modalEkuitas = totalAktiva - hutang; // Rumus: Aktiva = Pasiva (Hutang + Modal)
+                const modalEkuitas = totalAktiva - hutang; 
 
                 cont.innerHTML = `
                     <div class="max-w-5xl mx-auto mt-4">
                         <h3 class="text-xl md:text-2xl font-black text-slate-800 text-center mb-8"><i class="fas fa-balance-scale text-blue-500 mr-2"></i>NERACA KEUANGAN (BALANCE SHEET)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <!-- AKTIVA -->
                             <div class="bg-gradient-to-b from-blue-50 to-white p-6 md:p-8 rounded-2xl border border-blue-200 shadow-sm">
                                 <h4 class="text-lg md:text-xl font-black text-blue-800 mb-6 border-b-2 border-blue-200 pb-3">AKTIVA (ASET)</h4>
                                 <div class="flex justify-between mb-4"><span class="text-slate-600 font-bold">Kas Aktif</span> <span class="font-black text-slate-800 text-base md:text-lg">${formatRp(state.saldoKas)}</span></div>
@@ -1814,7 +1875,6 @@
                                 <div class="flex justify-between mb-6"><span class="text-slate-600 font-bold">Nilai Persediaan Barang</span> <span class="font-black text-slate-800 text-base md:text-lg">${formatRp(nilaiPersediaan)}</span></div>
                                 <div class="flex justify-between text-lg md:text-xl font-black mt-8 pt-4 border-t-4 border-blue-300 text-blue-900 bg-blue-100 p-3 rounded-lg"><span>TOTAL AKTIVA</span> <span>${formatRp(totalAktiva)}</span></div>
                             </div>
-                            <!-- PASIVA -->
                             <div class="bg-gradient-to-b from-rose-50 to-white p-6 md:p-8 rounded-2xl border border-rose-200 shadow-sm">
                                 <h4 class="text-lg md:text-xl font-black text-rose-800 mb-6 border-b-2 border-rose-200 pb-3">PASIVA (KEWAJIBAN & MODAL)</h4>
                                 <div class="text-rose-800 font-black text-sm mb-3 uppercase tracking-wider">Kewajiban:</div>
